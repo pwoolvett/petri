@@ -1,0 +1,17 @@
+language: python
+python:
+  - 3.6
+install: pip install -U tox-travis
+script: tox
+deploy:
+  skip_cleanup: true
+  skip_existing: true
+  provider: pypi
+  distributions: sdist bdist_wheel
+  user: pwoolvett
+  password:
+    secure: nogiBm4DSvAsHvdkZYO5MXIMLzFvmBvQrXtiLJ+ehThFGKX7GpKPklTWZjBaemyfDo9uFrTN6NPOZPt6QNz2Ay1zuI2tw5rugfgA0HGIA9QePlYGL9odiGxG35YmaHg0TFmgse6dGKbfYtjnMr539pGpSuTrxmMMzqKmZkzfJli8SPoedBfMOPKnDImOxc/cqphHdJYZ4PZItmutS7Dy2o4wUXSG2pi6kF1vMjNBLpcMk7t3eIbR7kGViT18ZJwggQ+Hu/kvxKXgeirASne69t7rC51OneqF3FA+b9Ts9aRmVN32MArbj1SW1XO7F/0h/uU4dxzKrYXfzstXazImos4K9UKr3SLB3GImFvTgeHizrC21hM7Y4eUMkuzvUA1pcGVQ5ON4NJ2pAjZ6Fj8SlSHlp59Ndb9CU9AZntk0yXDkn057s6335xcoEOcEpTaA3swoaV2IVxEUGAnI1BO6EgLDqcZeOv9P32gxY2eiel2901WNOJGa493rLyF4ehYYTehzdA/1xHWi6Xa9JJvF7r4mDxrOLj5dSykITooWE1ofCRiRuWeA961n/GAZAOgikU/f8EiDzMbrqM/yfhljDgXgnW3IHXHY8mn9/z6UvVqecwsXvYWKYuANXSeKKBivVbaHO6PKhs8vCBL4/nzs9BorEmnXLXhnT6JFQ84hxdU=
+  on:
+    branch: master
+    repo: pwoolvett/petri
+    python: 3.6
