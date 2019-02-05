@@ -1,7 +1,10 @@
 language: python
 python:
   - 3.6
-install: pip install -U tox-travis
+install:
+  - pip install -U tox-travis
+  - python get-poetry.py --preview -y
+  - source $HOME/.poetry/env
 script: tox
 deploy:
   skip_cleanup: true
