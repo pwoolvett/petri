@@ -2,23 +2,21 @@
 # -- Path setup --------------------------------------------------------------
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('../..'))
 
-
 # -- Project information -----------------------------------------------------
+import petri
+from tests import unit
 
-from petri import (
-    __version__,
-    __release__,
-    __project_name__,
-    __author__,
-    # __copyright__,
-)  # noqa: E402
+petri.init_docs()
 
-project = __project_name__
-version = __version__
-release = __release__
-author = __author__
+print([x for x in globals() if x.startswith('__')])
+
+project = petri.__project_name__
+version = petri.__version__
+release = petri.__release__
+author = petri.__author__
 # copyright = __copyright__
 
 # -- General configuration ---------------------------------------------------
@@ -69,7 +67,6 @@ exclude_patterns = []
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
 
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -117,7 +114,6 @@ html_static_path = ['_static']
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'myprojectdoc'
 
-
 # -- Options for LaTeX output ------------------------------------------------
 
 latex_elements = {
@@ -146,7 +142,6 @@ latex_documents = [
      'PW', 'manual'),
 ]
 
-
 # -- Options for manual page output ------------------------------------------
 
 # One entry per manual page. List of tuples
@@ -155,7 +150,6 @@ man_pages = [
     (master_doc, 'myproject', 'myproject Documentation',
      [author], 1)
 ]
-
 
 # -- Options for Texinfo output ----------------------------------------------
 
@@ -171,7 +165,6 @@ texinfo_documents = [(
     'One line description of project.',
     'Miscellaneous'
 ), ]
-
 
 # -- Options for Epub output -------------------------------------------------
 
@@ -189,7 +182,6 @@ epub_title = project
 
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ['search.html']
-
 
 # -- Extension configuration -------------------------------------------------
 
