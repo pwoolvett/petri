@@ -1,9 +1,9 @@
 language: python
 python:
-  - 3.6
+- 3.6
 install:
-  - pip install -U tox-travis
-  - pip install poetry
+- pip install -U tox-travis
+- pip install poetry
 script: tox
 deploy:
   skip_cleanup: true
@@ -12,7 +12,7 @@ deploy:
   distributions: sdist bdist_wheel
   user: pwoolvett
   password:
-    secure: nogiBm4DSvAsHvdkZYO5MXIMLzFvmBvQrXtiLJ+ehThFGKX7GpKPklTWZjBaemyfDo9uFrTN6NPOZPt6QNz2Ay1zuI2tw5rugfgA0HGIA9QePlYGL9odiGxG35YmaHg0TFmgse6dGKbfYtjnMr539pGpSuTrxmMMzqKmZkzfJli8SPoedBfMOPKnDImOxc/cqphHdJYZ4PZItmutS7Dy2o4wUXSG2pi6kF1vMjNBLpcMk7t3eIbR7kGViT18ZJwggQ+Hu/kvxKXgeirASne69t7rC51OneqF3FA+b9Ts9aRmVN32MArbj1SW1XO7F/0h/uU4dxzKrYXfzstXazImos4K9UKr3SLB3GImFvTgeHizrC21hM7Y4eUMkuzvUA1pcGVQ5ON4NJ2pAjZ6Fj8SlSHlp59Ndb9CU9AZntk0yXDkn057s6335xcoEOcEpTaA3swoaV2IVxEUGAnI1BO6EgLDqcZeOv9P32gxY2eiel2901WNOJGa493rLyF4ehYYTehzdA/1xHWi6Xa9JJvF7r4mDxrOLj5dSykITooWE1ofCRiRuWeA961n/GAZAOgikU/f8EiDzMbrqM/yfhljDgXgnW3IHXHY8mn9/z6UvVqecwsXvYWKYuANXSeKKBivVbaHO6PKhs8vCBL4/nzs9BorEmnXLXhnT6JFQ84hxdU=
+    secure: BtJGI45HUsG68f6UOAVX4yAqcEdgVfo9kF/bwHlLQSQYu7sJxb+dPRelheaYeEIbqPHGG7UyQlo1CjtJDLtAj1fs32WVHYMv+CuVehs9gjJC6uaz4mNhjG0RWdjMEvq9jATd77IXuVHPl19wIyUz8Ryq93BCqMcKSc/hkuuUZ+l7nhRARpubX2v6h4kbgfwAHwyQ0vSXTWvLvGdBu9M9JzpI0JLlzyhIaL8M3hB6LwlG2SJ2H/VHRXlNxuhGyAega+RC8o6ObeyKJ42Xw98aCji4G9aFVUgXaJuOmxktBuTqjdAsGy8IANQ5G0TKBmnPs8Une9QtYg2g1/exNpgC1lR0/EYvcBaU1MI60XmV+1r0+GliH+zMAJWqeoKjO52ZdEqK1KNR8pUsGQDTvCMiCZ04i7gDFnfBQvSGwHFuW+eX4qrcuhD8u8MpAhgFEvT0AXzb4H7Vz/jK2cchV8J96uQ/4z+qxfM7X2RtagpnNfZzbbi33HBsTt44T+w4FpODqScQuGmKGbfso3oJZqcNTT9YvBrwuBD0QPdRl/JWgm8GxyuuQOlvAXcuJgE/z29xBtEc54GLG8QhfrD/9kIiXdj0B2XB97mdrtxw+lmEl37hPHgtsmGjbb1tUhHRgTSP0dFI64WvIQzQhqTAEkmKeBtMvQjHpZfSgyWimvh1VrA=
   on:
     branch: master
     repo: pwoolvett/petri
