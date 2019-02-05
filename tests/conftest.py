@@ -19,10 +19,7 @@ def pytest_addoption(parser):
     :code:`@pytest.mark.slow` marked tests.
     """
     parser.addoption(
-        "--runslow",
-        action="store_true",
-        default=False,
-        help="run slow tests"
+        "--runslow", action="store_true", default=False, help="run slow tests"
     )
 
 
@@ -159,10 +156,7 @@ def pytest_runtest_makereport(item, call):
 
 
 def pytest_configure(config):
-    dotenv_location = "tests/.env.test"
-    os.environ["DOTENV_LOCATION"] = dotenv_location
-    if os.path.isfile(dotenv_location):
-        os.remove(dotenv_location)
+    os.environ["DOTENV_LOCATION"] = os.path.join(os.path.dirname(__file__), ".env.test")
 
     return config
 
