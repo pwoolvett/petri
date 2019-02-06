@@ -9,7 +9,7 @@ def test_init():
 
     import petri
 
-    s = petri.init()
+    s, logger = petri.init()
 
     assert os.environ["OVERLOAD"] == "OLD"
     assert os.environ["ENV"] == "TEST"

@@ -15,6 +15,14 @@ logger = logging.get_logger()
 
 
 def setup(filename=None):
+    """
+
+    Args:
+        filename:
+
+    Returns:
+
+    """
     if filename:
         fn = filename
     else:
@@ -30,13 +38,24 @@ def setup(filename=None):
 
 
 def init():
+    """
+
+    Returns:
+
+    """
     fn, module, pkg = setup()
     metadata.monkey_patch_metadata(fn, module, pkg)
     s = init_dotenv(fn, module, pkg)
-    return s
+    logger_ = logging.gen_logger(pkg)
+    return s, logger_
 
 
 def init_docs():
+    """
+
+    Returns:
+
+    """
     fn, module, pkg = setup(__file__)
 
     logger.info(f"Module to be patched: {module}")

@@ -14,7 +14,7 @@ class MyFormatter(logzero.LogFormatter):
             [
                 "%(color)s",
                 "%(asctime)s" " %(levelname)s | ",
-                "%(filename)s:%(name)s:%(funcName)s:%(lineno)d",
+                "%(name)s>%(filename)s:%(funcName)s:%(lineno)d",
                 "%(end_color)s" ":\n",
                 "%(message)s",
             ]
@@ -24,12 +24,22 @@ class MyFormatter(logzero.LogFormatter):
         super(MyFormatter, self).__init__(fmt=fmt, datefmt=datefmt)
 
 
-def get_logger(log_level=1):
+def gen_logger(pkg, log_level=1):
     """Return properly formatted logger
+
+    Args:
+        pkg:
+        log_level:
+
+    Returns:
+
     """
 
-    _logger = logzero.setup_logger(
-        name=__package__, level=log_level, formatter=MyFormatter()
-    )
+    _logger = logzero.setup_logger(name=pkg, level=log_level, formatter=MyFormatter())
 
     return _logger
+
+
+def get_logger(log_level=1):
+    """Calls gen_logger using petri as package"""
+    return gen_logger(__package__, log_level=log_level)
