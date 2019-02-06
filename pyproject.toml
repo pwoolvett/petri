@@ -1,7 +1,7 @@
 [tool.poetry]
   project_name = "petri"
   name = "petri"
-  version = "0.5.0"
+  version = "0.6.0"
   release = "pre-alpha"
   description = "Handle dotenv and metainfo from pyproject.toml"
   author = "Pablo Woolvett <pablowoolvett@gmail.com>"
