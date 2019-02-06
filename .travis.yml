@@ -1,15 +1,20 @@
 language: python
 python:
 - 3.6
-install:
-- pip install -U tox-travis
+before_install:
 - pip install poetry
-script: tox
+- pip install -U tox-travis
+install:
+  - poetry install
+script:
+  - tox
+before_deploy:
+  - poetry build -f sdist
 deploy:
   skip_cleanup: true
   skip_existing: true
-  provider: pypi
-  distributions: sdist bdist_wheel
+  provider: script
+  script: poetry publish -r pypi
   user: pwoolvett
   password:
     secure: Uv7kc4p1mBUCW9tdLO1AcX4daNfNdr6WrbpYX8txNi1WODXu2VEZQKNogUe8aEMYA5o4ExemdFoJTkHMiOgntbrdM516vOY817PjkEZmFoRWS+RlvcJP+nLB2OVmgZCEtEDH+2eP8pCh4XgO1jC832rrcu/+GbcoF1mjwE/n+SzjL5TaamMLgBtEP+9CVjpqH46l+8bmnsWv9dX7UW58VA/DI3qBH+RQwVOopG5kqmFIzYt8v/gR1Z/IgGLATGn6SsJBwe/QCKxHdZ43i/qDG0pJTgVKwnE9US/HvshADLG0skXaIm6WO4JM2GII7s9yrj7lzxxmodBhyxNwVEjfkwIuFtxvXClTrICaROpqniuC7djnMaLrh/Am6WouMpDz46geT7ytE452fmUgaGsWcSZvFKJ664l80k2WoKix9ELDes4GX5qZlg5fX1/P2/eDXusBsFxWn49snhiVrAPtmhe41CGeuqN7ATUE9QbI5F0qO6O6YEtxFh/nyjh4IhDu3XJ3wZR02hdM4ewmN+Og46I40m6r9Zewm/MWoj9UtdB9DUBvIZRq/gRExL+/TiX2dxxg7RmKvjxO4xg84G9bTWVnArFm717l16nftDrNJ6s9LdhqNpyYaon1O6fGt8mObggTeXzzWD0xXlsFzG5Th6/qFmFQEFP40zm/jlFW+O0=
