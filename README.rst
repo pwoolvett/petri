@@ -12,17 +12,14 @@
    :alt: Maintainability
 
 
-1. clone
-2. refactor "package" folder
-3. enjoy!
-
-
 reqs:
   poetry
   tox
   python>=3.6
 
-for dev:
+for devs:
+  :code:`tox -e venv` creates virtualenv located at .venv
+
   :code:`tox -e venv` creates virtualenv located at .venv
 
 testing:
