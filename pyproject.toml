@@ -1,15 +1,16 @@
 [tool.poetry]
   project_name = "petri"
   name = "petri"
-  version = "0.1.0"
+  version = "0.5.0-alpha.0"
   release = "pre-alpha"
-  description = "handle dotenv and metainfo from pyproject.toml"
+  description = "Handle dotenv and metainfo from pyproject.toml"
   author = "Pablo Woolvett <pablowoolvett@gmail.com>"
   authors = [
     "Pablo Woolvett <pablowoolvett@gmail.com>"
   ]
+  readme = "README.rst"
   maintainer = "Pablo Woolvett <pablowoolvett@gmail.com>"
-  license = ""
+  license = "MIT"
   copyright = ""
   url = ""
 
