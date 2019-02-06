@@ -14,5 +14,5 @@ def test_log():
     logger.debug("hello")
     logger.info("info")
     logger.warning("warning")
-    logger.exception(BaseException('Except this '))
+    logger.exception(BaseException("Except this "))
     logger.error("error")
