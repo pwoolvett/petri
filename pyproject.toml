@@ -7,7 +7,7 @@ license = "MIT"
 
 [tool.poetry]
 name = "petri"
-version = "0.17.0"
+version = "0.18.0"
 description = "Handle project/application config from pyproject.toml"
 authors = [
   "Pablo Woolvett <pablowoolvett@gmail.com>"
