@@ -12,6 +12,7 @@ def _main():
         a_1 = argv[1]
         if a_1.startswith("--"):
             print(getattr(petri.__meta__, a_1[2:]))
+            return
 
     print(petri.__doc__)
 
