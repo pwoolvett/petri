@@ -29,8 +29,8 @@ def test_import_from_script(tmpdir):
     root = tmpdir.mkdir("project_root")
     pyproject_file = root.join("pyproject.toml")
     script_file = root.join("test_script.py")
-    pyproject_file.write(open("tests/unit/script_pyproject.toml").read())
-    script_file.write(open("tests/unit/sample_script.py").read())
+    pyproject_file.write(open("tests/data/script_pyproject.toml").read())
+    script_file.write(open("tests/data/sample_script.py").read())
 
     script_file.pyimport()
 
@@ -46,12 +46,12 @@ def test_import_from_package(tmpdir):
     pyproject_file = root.join("pyproject.toml")
     script_file = package.join("__init__.py")
     pyproject_file.write(
-        open("tests/unit/script_pyproject.toml")
+        open("tests/data/script_pyproject.toml")
         .read()
         .replace("script_example", "a_package")
     )
     script_file.write(
-        open("tests/unit/sample_script.py")
+        open("tests/data/sample_script.py")
         .read()
         .replace("script_example", "a_package")
     )

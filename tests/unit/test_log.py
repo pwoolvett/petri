@@ -40,7 +40,7 @@ def teardown_module():
     shutil.rmtree(log_folder.as_posix(), ignore_errors=True)
 
 
-def test_log(monkeypatch, _):
+def test_log(monkeypatch, caplog):
 
     info_ = "__TEST__: This is information"
     error_ = "__TEST__: This is an error"

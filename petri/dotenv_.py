@@ -23,10 +23,11 @@ class Milieu(BaseSettings):
     @property
     def DEFAULT_DOTENV_LOCATION(self) -> Optional[Path]:
         if self.main_file:
+            base = self.main_file.parent
             if self.main_file.stem == "__init__":
-                return self.main_file.parent.parent.joinpath(".env")
-            else:
-                return self.main_file.parent.joinpath(".env")
+                base = base.parent
+
+            return base.joinpath(".env")
 
         return None
 

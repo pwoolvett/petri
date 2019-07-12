@@ -62,4 +62,5 @@ def initialize(main_file_str: str, app_name: str = ""):
     return _initialize(**init_kw)
 
 
+# pylint: disable=invalid-name
 __meta__, DOTENV_LOCATION, SETTINGS, logger, _ = initialize(__file__, "petri")
