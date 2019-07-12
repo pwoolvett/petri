@@ -7,5 +7,6 @@ import petri
 
 
 if __name__ == "__main__":
-    if "--version" in sys.argv:
-        print(petri.__meta__.version)
+    a1 = sys.argv[1]
+    if a1.startswith('--'):
+        print(getattr(petri.__meta__, a1[2:]))

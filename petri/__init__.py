@@ -37,7 +37,7 @@ def _initialize(**kwargs):
     dle_path = _Path(dotenv_location_env) if dotenv_location_env else None
     dotenv_location_ = init_dotenv(path=dle_path, main_file=main_file)
 
-    env = os.environ["ENV"]
+    env = os.environ.get("ENV", kwargs["env"])
     app_name = app_name or metadata_.package_name
     settings_ = BaseConfig.from_env(env, main_file, app_name)
     logger_ = create_logger(
@@ -49,12 +49,12 @@ def _initialize(**kwargs):
     return metadata_, dotenv_location_, settings_, logger_, tqdm_
 
 
-def initialize(main_file_str: str, app_name: str = ""):
+def initialize(main_file_str: str, app_name: str = "", **kw):
 
     main_file = _Path(main_file_str)
     stem = main_file.stem
 
-    init_kw = {"main_file": main_file, "app_name": app_name}
+    init_kw = {"main_file": main_file, "app_name": app_name, **kw}
 
     if stem != "__init__":
         init_kw["pyproject_file"] = main_file.parent.joinpath("pyproject.toml")
@@ -63,4 +63,6 @@ def initialize(main_file_str: str, app_name: str = ""):
 
 
 # pylint: disable=invalid-name
-__meta__, DOTENV_LOCATION, SETTINGS, logger, _ = initialize(__file__, "petri")
+__meta__, DOTENV_LOCATION, SETTINGS, logger, _ = initialize(
+    __file__, "petri", env="development"
+)
