@@ -156,6 +156,8 @@ def make_tqdm(env: str) -> Callable:
     if env == "production":
         return lambda x: x
 
-    import tqdm
-
-    return tqdm.tqdm
+    try:
+        import tqdm
+        return tqdm.tqdm
+    except ModuleNotFoundError:
+        return lambda x: x
