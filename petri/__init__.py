@@ -1,65 +1,65 @@
 # coding=utf-8
-"""Package documentation
+"""Handle project/application config from pyproject.toml.
+
+Features include::
+
+    * lazy-loading of project metadata from pyproject.toml
+    * pre-loading a dotenv file
+    * equipping a package/app/script/module with a pre-configured logger
+
 
 .. versionadded:: 0.1.0
    Initial version.
 
 """
-import inspect
-import sys
+import os
+from pathlib import Path as _Path
 
-from petri import _logging_ as logging, metadata
-from petri.settings import init_dotenv
-
-logger = logging.get_logger()
-
-
-def setup(filename=None):
-    """
-
-    Args:
-        filename:
-
-    Returns:
-
-    """
-    if filename:
-        fn = filename
-    else:
-        frame_records = inspect.stack()
-        fn = frame_records[2].filename
-    module = {
-        v.__file__: v for k, v in sys.modules.items() if getattr(v, "__file__", None)
-    }[fn]
-
-    pkg = module.__package__
-
-    return fn, module, pkg
+from .metadata import Metadata
+from .dotenv_ import init_dotenv
+from .logging_ import create_logger, LogLevel, LogMode, make_tqdm
+from .base_settings import BaseConfig
 
 
-def init():
-    """
-
-    Returns:
-
-    """
-    fn, module, pkg = setup()
-    metadata.monkey_patch_metadata(fn, module, pkg)
-    s = init_dotenv(fn, module, pkg)
-    logger_ = logging.gen_logger(pkg)
-    return s, logger_
+# pylint: disable=missing-docstring
 
 
-def init_docs():
-    """
+def _initialize(**kwargs):
+    """Instantiates all objects using a single python file."""
 
-    Returns:
+    main_file = kwargs["main_file"]
+    pyproject_file = kwargs.get("pyproject_file")
+    app_name = kwargs.get("app_name")
 
-    """
-    fn, module, pkg = setup(__file__)
+    metadata_ = Metadata(main_file, pyproject_file=pyproject_file)
 
-    logger.info(f"Module to be patched: {module}")
+    dotenv_location_env = os.environ.get("DOTENV_LOCATION", None)
+    dle_path = _Path(dotenv_location_env) if dotenv_location_env else None
+    dotenv_location_ = init_dotenv(path=dle_path, main_file=main_file)
 
-    metadata.monkey_patch_metadata(fn, module, pkg)
-    s = init_dotenv(fn, module, pkg)
-    return s
+    env = os.environ["ENV"]
+    app_name = app_name or metadata_.package_name
+    settings_ = BaseConfig.from_env(env, main_file, app_name)
+    logger_ = create_logger(
+        settings_.LOG_LEVEL, settings_.LOG_MODE, settings_.LOG_STORAGE
+    )
+
+    tqdm_ = make_tqdm(env)
+
+    return metadata_, dotenv_location_, settings_, logger_, tqdm_
+
+
+def initialize(main_file_str: str, app_name: str = ""):
+
+    main_file = _Path(main_file_str)
+    stem = main_file.stem
+
+    init_kw = {"main_file": main_file, "app_name": app_name}
+
+    if stem != "__init__":
+        init_kw["pyproject_file"] = main_file.parent.joinpath("pyproject.toml")
+
+    return _initialize(**init_kw)
+
+
+__meta__, DOTENV_LOCATION, SETTINGS, logger, _ = initialize(__file__, "petri")

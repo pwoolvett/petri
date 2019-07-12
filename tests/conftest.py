@@ -4,14 +4,15 @@
 
 Activate common pytest patterns and set environment variables:
 
-  * New decorator: decorador :func:`@pytest.mark.slow` and new flag :code:`--runslow` to the tests.
-  * New decorator: :func:`@pytest.mark.incremental` which enables early falure for incremental tests.
+  * New decorator-flag pair: `@pytest.mark.slow` and `--runslow`.
+  * New decorator: `@pytest.mark.incremental`.
   * Define location of the `.env` file to be `tests/.env.test`.
 
 """
-import os
 
 import pytest
+
+from tests import define_test_dotenv
 
 
 def pytest_addoption(parser):
@@ -29,49 +30,37 @@ def pytest_collection_modifyitems(config, items):
     Adds a `--runslow` command line option to control skipping of
     :code:`@pytest.mark.slow` marked tests.
 
-    Example:
+    Example::
+        $ print(open('test_skip.py','r').read())
+          import pytest
 
-        .. code-block:: python
+          @pytest.mark.slow
+          def test_skippable():
+              pass
 
-            # Content of test_module.py:
-            import pytest
-
-
-            def test_func_fast():
-                pass
-
-
-            @pytest.mark.slow
-            def test_func_slow():
-                from time import sleep
-                sleep(500)
-
-        When running it will see a skipped “slow” test::
-
-          $ pytest -rs    # "-rs" means report details on the little 's'
-          =========================== test session starts ============================
-          platform linux -- Python 3.x.y, pytest-3.x.y, py-1.x.y, pluggy-0.x.y
-          rootdir: $REGENDOC_TMPDIR, inifile:
-          collected 2 items
-
-          test_module.py .s                                                    [100%]
-          ========================= short test summary info ==========================
-          SKIP [1] test_module.py:8: need --runslow option to run
-
-          =================== 1 passed, 1 skipped in 0.12 seconds ====================
-
-        Or run it including the slow marked test::
-
-          $ pytest --runslow
-          =========================== test session starts ============================
-          platform linux -- Python 3.x.y, pytest-3.x.y, py-1.x.y, pluggy-0.x.y
-          rootdir: $REGENDOC_TMPDIR, inifile:
-          collected 2 items
-
-          test_module.py ..                                                    [100%]
-
-          ========================= 2 passed in 0.12 seconds =========================
-
+          def test_always():
+              pass
+        >>> import pytest
+        >>> pytest.main(['-rap','test_skip.py'])
+            =================== test session starts ====================
+            ...
+            collected 2 items
+            ...
+            testmodule.py s.                                      [100%]
+            ================= short test summary info ==================
+            SKIPPED [1] test_skip.py:3: need --runslow option to run
+            PASSED test_module.py::test_always
+            ...
+        >>> pytest.main(['-rap', '--runslow', 'test_skip.py'])
+            =================== test session starts ====================
+            ...
+            collected 2 items
+            ...
+            testmodule.py s.                                      [100%]
+            ================= short test summary info ==================
+            PASSED test_module.py::test_skippable
+            PASSED test_module.py::test_always
+            ...
     """
     if config.getoption("--runslow"):
         # --runslow given in cli: do not skip slow tests
@@ -85,60 +74,46 @@ def pytest_collection_modifyitems(config, items):
 def pytest_runtest_setup(item):
     """Incremental testing - test steps : setup
 
-    Abort incremental-marked tests in a class if previous test failed.
+    Abort tests within a `@pytest.mark.incremental`-decorated class if
+    previous test failed.
 
-    @pytest.mark.incremental
+    Example::
 
-     Example:
+        Notice `test_wont_run` is not executed because `test_error`
+        failed. `test_wont_run` is reported as an “expected failure”.
 
-        .. code-block:: python
-
-            # content of test_step.py
-            import pytest
-
-
-            @pytest.mark.incremental
-            class TestUserHandling(object):
-                def test_login(self):
-                    pass
-
-                def test_modification(self):
-                    assert 0
-
-                def test_deletion(self):
-                    pass
+        >>> print(open('test_incremental.py','r').read())
+        import pytest
 
 
-            def test_normal():
-                pass
+        @pytest.mark.incremental
+        class TestUserHandling:
+            def test_ok(self):
+                assert True
 
-        If we run this::
+            def test_error(self):
+                assert False
 
-          $ pytest -rx
-          =========================== test session starts ============================
-          platform linux -- Python 3.x.y, pytest-3.x.y, py-1.x.y, pluggy-0.x.y
-          rootdir: $REGENDOC_TMPDIR, inifile:
-          collected 4 items
+            def test_wont_run(self):
+                assert False
 
-          test_step.py .Fx.                                                    [100%]
 
-          ================================= FAILURES =================================
-          ____________________ TestUserHandling.test_modification ____________________
+        def test_ok2():
+            assert True
 
-          self = <test_step.TestUserHandling object at 0xdeadbeef>
 
-              def test_modification(self):
-          >       assert 0
-          E       assert 0
-
-          test_step.py:11: AssertionError
-          ========================= short test summary info ==========================
-          XFAIL test_step.py::TestUserHandling::()::test_deletion
-            reason: previous test failed (test_modification)
-          ============== 1 failed, 2 passed, 1 xfailed in 0.12 seconds ===============
-
-        We’ll see that test_deletion was not executed because test_modification failed.
-        It is reported as an “expected failure”.
+        def test_error2():
+            assert False
+        >>> import pytest
+        >>> pytest.main(['-s','-qqq','-rfEsxXpP','test_incremental.py'])
+            ...
+            ================= short test summary info ==================
+            FAILED test_incremental.py::TestUserHandling::test_error
+            FAILED test_incremental.py::test_error2
+            XFAIL test_incremental.py::TestUserHandling::test_wont_run
+              reason: Previous test failed (previousfailed.name)
+            PASSED test_incremental.py::TestUserHandling::test_ok
+            PASSED test_incremental.py::test_ok2
 
     """
     if "incremental" in item.keywords:
@@ -148,19 +123,20 @@ def pytest_runtest_setup(item):
 
 
 def pytest_runtest_makereport(item, call):
-    """Incremental testing - test steps : report status to class object."""
+    """Report method reusult status to class object for incremental."""
     if "incremental" in item.keywords:
         if call.excinfo is not None:
             parent = item.parent
-            parent._previousfailed = item
+            parent._previousfailed = item  # pylint: disable=protected-access
 
 
-def pytest_configure(config):
-    os.environ["DOTENV_LOCATION"] = os.path.join(os.path.dirname(__file__), ".env.test")
-
+def pytest_configure(config):  # pylint: disable=missing-docstring,
+    define_test_dotenv()
+    config.addinivalue_line(
+        "markers", "slow: mark test to skip unless --runslow is received."
+    )
     return config
 
 
-def pytest_unconfigure(config):
-
+def pytest_unconfigure(config):  # pylint: disable=missing-docstring,
     return config

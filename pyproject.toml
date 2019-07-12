@@ -1,41 +1,55 @@
-[tool.poetry]
-  project_name = "petri"
-  name = "petri"
-  version = "0.8.0"
-  release = "pre-alpha"
-  description = "Handle dotenv and metainfo from pyproject.toml"
-  author = "Pablo Woolvett <pablowoolvett@gmail.com>"
-  authors = [
-    "Pablo Woolvett <pablowoolvett@gmail.com>"
-  ]
-  readme = "README.rst"
-  maintainer = "Pablo Woolvett <pablowoolvett@gmail.com>"
-  license = "MIT"
-  copyright = ""
-  url = ""
+[tool.meta]
+release = "pre-alpha"
+maintainer = "Pablo Woolvett <pablowoolvett@gmail.com>"
+copyright = ""
+url = "https://www.github.com/pwoolvett/petri"
+license = "MIT"
 
+[tool.poetry]
+name = "petri"
+version = "0.9.0"
+description = "Handle project/application config from pyproject.toml"
+authors = [
+  "Pablo Woolvett <pablowoolvett@gmail.com>"
+]
+readme = "README.rst"
 
 [tool.poetry.dependencies]
-  python = "^3.6"
-  python-dotenv = { git = "https://github.com/theskumar/python-dotenv.git", branch = "master" }
-  fire = "^0.1.3"
-  tqdm = "^4.28"
-  logzero = "^1.5"
-  pandas = "^0.23.4"
-  Autologging = "^1.2"
-  
+python = "^3.6"
+python-dotenv= "^0.10"
+logzero= "^1.5"
+toml= "^0.10"
+pydantic= "^0.30"
+autologging = "^1.3"
+tzlocal = "^1.5"
 
 [tool.poetry.dev-dependencies]
-  black = { git = "https://github.com/ambv/black.git", branch = "master" }
-  pytest = "^4.0"
-  coverage = "^4.5"
-  pytest-cov = "^2.6"
-  flake8 = "^3.6"
-  behave = "^1.2"
-  Sphinx = "^1.8"
-  sphinx_rtd_theme = "^0.4.2"
-  sphinx-autodoc-typehints = "^1.5"
+black = { version = "*", allows-prereleases = true }
+autopep8 = "^1.4"
+pylint = "^2.3"
+flake8 = "^3.7"
+flake8-bugbear = "^19.3"
+mypy = "^0.701"
+mypy-extensions = "^0.4"
+coverage = "^4.5"
+pytest-cov = "^2.6"
+hypothesis = "^4.17"
+behave = "^1.2"
+Sphinx = "^1.8"
+doc8 = "^0.8"
+sphinx_rtd_theme = "^0.4.2"
+sphinx-autodoc-typehints = "^1.5"
+sphinx-autobuild = "^0.7.1"
+pytest = "^4.0"
+pep8 = "^1.7"
+bandit = "^1.6"
+docformatter = "^1.1"
+tqdm = "^4.32"
 
+[tool.black]
+line-length = 79
+target-version = ['py36']
+quiet = true
 [build-system]
- requires = ["poetry>=0.12"]
- build-backend = "poetry.masonry.api"
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
