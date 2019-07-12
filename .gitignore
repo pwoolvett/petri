@@ -385,7 +385,7 @@ pip-selfcheck.json
 # ctags stuff
 
 .tags*
-
+.vscode/
 # backup stuff
 
 .bkp
