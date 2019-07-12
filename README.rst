@@ -11,19 +11,78 @@
    :target: https://codeclimate.com/github/pwoolvett/petri/maintainability
    :alt: Maintainability
 
+.. image:: https://img.shields.io/badge/python%20version-3.6.7-275479.svg
+   :target: https://img.shields.io/badge/python%20version-3.6.7-275479.svg
+   :alt: Python Version
 
-reqs:
-  poetry
-  tox
-  python>=3.6
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+   :target: https://img.shields.io/badge/code%20style-black-000000.svg
+   :alt: Code Style
 
-for devs:
-  :code:`tox -e venv` creates virtualenv located at .venv
 
-  :code:`tox -e venv` creates virtualenv located at .venv
+Summary
+-------
+Avoid boilerplate python code.
 
-testing:
+Importing petri automagically equips your script/pacakage with:
 
-- unit / developer-required tests with pytest
-- integration testing with docker-compose+pytest
-- user stories testing with docker-compose+behave
+* settings using pydantic.
+* dotenv file handling using python-dotenv.
+* logging config using logzero&autologging.
+* project metadata from a pyproject.toml file.
+* environment (prod/dev/test) handling via ENV environment variable.
+
+Screenshots
+-----------
+
+.. image:: static/screenshots/api.png
+
+
+Code Example
+------------
+
+* see tests/data folder
+
+
+Requirements
+------------
+
+- Usage requirements
+
+   + python>=3.6
+
+- Development requirements
+
+   + tox
+   + poetry (recommended)
+
+
+Installation
+------------
+
+- pip install petri
+
+Testing
+-------
+
+- run `tox -e venv` to create an appropiate virtualenv
+- `tox` to run the full test suite
+
+
+Contribute
+----------
+
+- Development
+   
+   + Make sure to pass tox tests (including those with `--runslow`).
+   + For tests design, you can use use ´@pytest.mark.incremental´ and  ´@pytest.mark.slow´. See "catalogo_db/tests/conftest.py"
+   + If the requirements change, make sure to re-build all images
+
+- Versioning
+   
+   + Use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/pwoolvett/petri/tags).
+
+Support
+-------
+
+If you are having issues, please file an issue in github.
