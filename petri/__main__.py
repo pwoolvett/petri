@@ -6,7 +6,15 @@ import sys
 import petri
 
 
+def _main():
+    argv = sys.argv
+    if len(argv) > 1:
+        a_1 = argv[1]
+        if a_1.startswith("--"):
+            print(getattr(petri.__meta__, a_1[2:]))
+
+    print(petri.__doc__)
+
+
 if __name__ == "__main__":
-    a1 = sys.argv[1]
-    if a1.startswith('--'):
-        print(getattr(petri.__meta__, a1[2:]))
+    _main()

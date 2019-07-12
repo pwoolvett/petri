@@ -37,7 +37,7 @@ def _initialize(**kwargs):
     dle_path = _Path(dotenv_location_env) if dotenv_location_env else None
     dotenv_location_ = init_dotenv(path=dle_path, main_file=main_file)
 
-    env = os.environ.get("ENV", kwargs["env"])
+    env = os.environ.get("ENV") or kwargs["env"]
     app_name = app_name or metadata_.package_name
     settings_ = BaseConfig.from_env(env, main_file, app_name)
     logger_ = create_logger(

@@ -386,6 +386,7 @@ pip-selfcheck.json
 
 .tags*
 .vscode/
+docs/source/*.rst
 # backup stuff
 
 .bkp

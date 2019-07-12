@@ -158,6 +158,7 @@ def make_tqdm(env: str) -> Callable:
 
     try:
         import tqdm
+
         return tqdm.tqdm
     except ModuleNotFoundError:
         return lambda x: x

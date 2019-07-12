@@ -17,6 +17,7 @@ release = __meta__.release
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    "sphinxcontrib.apidoc",
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
     'sphinx_autodoc_typehints',
@@ -27,6 +28,66 @@ extensions = [
     "sphinx.ext.ifconfig",
     "sphinx.ext.viewcode",
 ]
+
+# region  ======================= apidoc =======================
+apidoc_module_dir = "../../petri"
+""" The path to the module to document. This must be a path to a Python package. This path can be a path relative to the documentation source directory or an absolute path.
+
+Required
+"""
+    
+apidoc_output_dir = "."
+"""The output directory. If it does not exist, it is created. This path is relative to the documentation source directory.
+
+Optional, defaults to api.
+"""
+
+# apidoc_excluded_paths
+    # """An optional list of modules to exclude. These should be paths relative to apidoc_module_dir. fnmatch-style wildcarding is supported.
+
+    # Optional, defaults to [].
+    # """
+
+apidoc_separate_modules = True
+"""Put documentation for each module on its own page. Otherwise there will be one page per (sub)package.
+
+Optional, defaults to False.
+"""
+
+# apidoc_toc_file
+# """Filename for a table of contents file. Defaults to modules. If set to False, apidoc will not create a table of contents file.
+
+# Optional, defaults to None.
+# """
+
+apidoc_module_first = True
+"""When set to True, put module documentation before submodule documentation.
+
+Optional, defaults to False.
+"""
+
+apidoc_extra_args = [
+    "--force",
+    "--private",
+    "--ext-doctest",
+    "--ext-intersphinx",
+    "--ext-todo",
+    "--ext-coverage",
+    "--ext-imgmath",
+    "--ext-mathjax",
+    "--ext-ifconfig",
+    "--ext-viewcode",
+    "--ext-githubpages",
+    "-e",
+    "-M",
+]
+"""Extra arguments which will be passed to sphinx-apidoc. These are placed after flags and before the module name.
+
+Optional, defaults to [].
+"""
+# endregion ===================== apidoc =======================
+
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 # The suffix(es) of source filenames.

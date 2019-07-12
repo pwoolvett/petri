@@ -7,13 +7,16 @@ license = "MIT"
 
 [tool.poetry]
 name = "petri"
-version = "0.14.0"
+version = "0.15.0"
 description = "Handle project/application config from pyproject.toml"
 authors = [
   "Pablo Woolvett <pablowoolvett@gmail.com>"
 ]
 readme = "README.rst"
 include = ["pyproject.toml"]
+
+[tool.poetry.scripts]
+petri = 'petri.__main__:_main'
 
 [tool.poetry.dependencies]
 python = "^3.6"
@@ -46,11 +49,13 @@ pep8 = "^1.7"
 bandit = "^1.6"
 docformatter = "^1.1"
 tqdm = "^4.32"
+"sphinxcontrib.apidoc" = "^0.3.0"
 
 [tool.black]
 line-length = 79
 target-version = ['py36']
 quiet = true
+
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"

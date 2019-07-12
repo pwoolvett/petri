@@ -2,6 +2,10 @@
     :target: https://travis-ci.org/pwoolvett/petri
     :alt: Build Status
 
+.. image:: https://readthedocs.org/projects/petri/badge/?version=latest
+   :target: https://petri.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
+
 .. image:: https://api.codeclimate.com/v1/badges/f0f976249fae332a0bab/test_coverage
    :target: https://codeclimate.com/github/pwoolvett/petri/test_coverage
    :alt: Test Coverage
