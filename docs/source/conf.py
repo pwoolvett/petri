@@ -80,6 +80,8 @@ apidoc_extra_args = [
     "--ext-githubpages",
     "-e",
     "-M",
+    "--tocfile",
+    "index"
 ]
 """Extra arguments which will be passed to sphinx-apidoc. These are placed after flags and before the module name.
 
@@ -147,7 +149,7 @@ html_static_path = ["static"]
 # html_sidebars = {}
 # -- Options for HTMLHelp output ---------------------------------------------
 # Output file base name for HTML help builder.
-htmlhelp_basename = "myprojectdoc"
+htmlhelp_basename = "petridoc"
 # -- Options for LaTeX output ------------------------------------------------
 latex_elements: dict = {
     # The paper size ('letterpaper' or 'a4paper').

@@ -1,4 +1,7 @@
-.. toctree::
-   :maxdepth: 2
+petri
+=====
 
-    modules
+.. toctree::
+   :maxdepth: 4
+
+   petri
