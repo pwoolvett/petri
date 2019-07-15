@@ -2,8 +2,10 @@
 """Settings  boilerplate."""
 
 from abc import ABC
+from os import environ
 from pathlib import Path
 from pprint import pformat
+from typing import Optional
 from typing import TypeVar
 from typing import Type
 
@@ -44,8 +46,17 @@ class BaseConfig(BaseSettings, ABC):
         env_prefix = ""
 
     @classmethod
+    def read_env(cls, app_name: str = "") -> Optional[str]:
+        """Allow custom `ENV` to be loaded depending on cls."""
+
+        if app_name == "petri":
+            return environ.get("PETRI_ENV", "development")
+        else:
+            return environ.get("ENV")
+
+    @classmethod
     def from_env(
-        cls: Type[Conf], env: str, main_file: Path, app_name: str, **cls_data
+        cls: Type[Conf], main_file: Path, app_name: str, **cls_data
     ) -> Conf:
         """Allows instantiation from a single variable."""
 
@@ -53,6 +64,14 @@ class BaseConfig(BaseSettings, ABC):
             child.__fields__["ENV"].default: child
             for child in cls.__subclasses__()
         }
+
+        try:
+            env = cls.read_env(app_name) or cls_data["env"]
+        except KeyError as err:
+            msg = "no `ENV` supplied"
+            msg += f". Options: `{list(opts.keys())}`"
+            raise KeyError(msg) from err
+
         try:
             config_cls: Type[Conf] = opts[env]
         except KeyError as err:
@@ -60,6 +79,7 @@ class BaseConfig(BaseSettings, ABC):
             msg += f". Received: `{env}`"
             msg += f". Options: `{list(opts.keys())}`"
             raise KeyError(msg) from err
+
         try:
             project_settings = make_settings(main_file, app_name)
             config = config_cls(**project_settings, **cls_data)
@@ -92,6 +112,9 @@ class BaseConfig(BaseSettings, ABC):
 
 class _PetriConfig(BaseConfig):
     """DO NOT USE THIS - Used only to bootstrap petri from within."""
+
+    class Config:  # pylint: disable=missing-docstring,too-few-public-methods
+        env_prefix = "PETRI_"
 
     ENV = "development"
     LOG_LEVEL = LogLevel.ERROR

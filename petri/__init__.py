@@ -37,14 +37,13 @@ def _initialize(**kwargs):
     dle_path = _Path(dotenv_location_env) if dotenv_location_env else None
     dotenv_location_ = init_dotenv(path=dle_path, main_file=main_file)
 
-    env = os.environ.get("ENV") or kwargs["env"]
     app_name = app_name or metadata_.package_name
-    settings_ = BaseConfig.from_env(env, main_file, app_name)
+    settings_ = BaseConfig.from_env(main_file, app_name)
     logger_ = create_logger(
         settings_.LOG_LEVEL, settings_.LOG_MODE, settings_.LOG_STORAGE
     )
 
-    tqdm_ = make_tqdm(env)
+    tqdm_ = make_tqdm(settings_.ENV)
 
     return metadata_, dotenv_location_, settings_, logger_, tqdm_
 
@@ -63,6 +62,4 @@ def initialize(main_file_str: str, app_name: str = "", **kw):
 
 
 # pylint: disable=invalid-name
-__meta__, DOTENV_LOCATION, SETTINGS, logger, _ = initialize(
-    __file__, "petri", env="development"
-)
+__meta__, DOTENV_LOCATION, SETTINGS, logger, _ = initialize(__file__, "petri")

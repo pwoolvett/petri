@@ -23,8 +23,8 @@ def setup_function():
     "varname,varval,err_cls",
     [
         ("DOTENV_LOCATION", "ajsdhfkhjasdfkjhasdjkf.env", FileNotFoundError),
-        ("ENV", "produktioon", KeyError),
-        ("LOG_MODE", "1234", ValidationError),
+        ("PETRI_ENV", "produktioon", KeyError),
+        ("PETRI_LOG_MODE", "1234", ValidationError),
     ],
 )
 def test_environment(monkeypatch, varname, varval, err_cls):
