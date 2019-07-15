@@ -12,7 +12,9 @@ before_install:
 install:
 - poetry install
 script:
-- tox
+- tox -e format
+- tox -e lint
+- tox -e testcode
 before_deploy:
 - poetry config repositories.pypi https://upload.pypi.org/legacy/
 - poetry config http-basic.pypi $PYPI_USER $PYPI_PASS
