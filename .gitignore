@@ -367,6 +367,7 @@ modules.xml
 
 ### Python Patch ###
 .venv/
+.unit.venv/
 
 ### Python.VirtualEnv Stack ###
 # Virtualenv
