@@ -49,10 +49,10 @@ class BaseConfig(BaseSettings, ABC):
     def read_env(cls, app_name: str = "") -> Optional[str]:
         """Allow custom `ENV` to be loaded depending on cls."""
 
-        if app_name == "petri":
-            return environ.get("PETRI_ENV", "development")
-        else:
+        if app_name != "petri":
             return environ.get("ENV")
+
+        return environ.get("PETRI_ENV", "development")
 
     @classmethod
     def from_env(
