@@ -18,7 +18,7 @@ from pathlib import Path as _Path
 from .metadata import Metadata
 from .dotenv_ import init_dotenv
 from .logging_ import create_logger, LogLevel, LogMode, make_tqdm
-from .base_settings import BaseConfig
+from .base_settings import BaseSettings
 
 
 # pylint: disable=missing-docstring
@@ -38,7 +38,7 @@ def _initialize(**kwargs):
     dotenv_location_ = init_dotenv(path=dle_path, main_file=main_file)
 
     app_name = app_name or metadata_.package_name
-    settings_ = BaseConfig.from_env(main_file, app_name)
+    settings_ = BaseSettings.from_env(main_file, app_name)
     logger_ = create_logger(
         settings_.LOG_LEVEL, settings_.LOG_MODE, settings_.LOG_STORAGE
     )

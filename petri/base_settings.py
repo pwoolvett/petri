@@ -10,19 +10,22 @@ from typing import TypeVar
 from typing import Type
 
 from pydantic import ValidationError
-from pydantic import BaseSettings
+from pydantic import BaseSettings as PydanticBaseSettings
 
 from .logging_ import LogLevel, LogMode
 
-Conf = TypeVar("Conf", bound="BaseConfig")
-"""Generic variable that can be 'BaseConfig', or any subclass."""
+Conf = TypeVar("Conf", bound="BaseSettings")
+"""Generic variable that can be 'BaseSettings', or any subclass."""
 
 
-class BaseConfig(BaseSettings, ABC):
+class BaseSettings(PydanticBaseSettings, ABC):
     """Boilerplate for config loading and dotenv handling."""
 
     ENV: str
     """Mandatory class attribute."""
+
+    APP: str
+    """Name for the application importing petri."""
 
     BASEPATH: Path
     """Absolute path to the project directory"""
@@ -55,15 +58,64 @@ class BaseConfig(BaseSettings, ABC):
         return environ.get("PETRI_ENV", "development")
 
     @classmethod
+    def get_opts(cls, app_name: str = "") -> Optional[dict]:
+        """Allow custom `ENV` to be loaded depending on cls."""
+
+        if app_name != "petri":
+
+            def bootstrap_filter(class_type):
+                return class_type != _PetriSettings
+
+        else:
+
+            def bootstrap_filter(
+                class_type
+            ):  # pylint: disable=unused-argument
+                return True
+
+        return {
+            child.__fields__["ENV"].default: child
+            for child in cls.__subclasses__()
+            if bootstrap_filter(child)
+        }
+
+    @staticmethod
+    def build_kwargs(main_file: Path, app_name: str):
+        """Define default values using the `__init__.py` file."""
+        base_path = main_file.parent
+        if main_file.stem == "__init__":
+            package_path, base_path = base_path, base_path.parent
+
+            if app_name != package_path.stem:
+                msg = (
+                    f"`app_name={app_name}` supplied, "
+                    "but differs from`package_folder={package_path.stem}`"
+                )
+                raise ValueError(msg)
+
+        else:
+            package_path = base_path
+
+        return {
+            "APP": app_name,
+            "BASEPATH": base_path,
+            "PKG_PATH": package_path,
+            "DATA": Path(base_path).joinpath("data"),
+            "LOG_STORAGE": Path(base_path).joinpath("logs"),
+        }
+
+    @classmethod
     def from_env(
         cls: Type[Conf], main_file: Path, app_name: str, **cls_data
     ) -> Conf:
         """Allows instantiation from a single variable."""
 
-        opts = {
-            child.__fields__["ENV"].default: child
-            for child in cls.__subclasses__()
-        }
+        opts = cls.get_opts(app_name)
+
+        if not opts:
+            msg = f"No {cls} subclasses found"
+            msg += f". Create one equipped with a default `ENV` (test/dev,etc)"
+            raise ResourceWarning(msg)
 
         try:
             env = cls.read_env(app_name) or cls_data["env"]
@@ -81,7 +133,7 @@ class BaseConfig(BaseSettings, ABC):
             raise KeyError(msg) from err
 
         try:
-            project_settings = make_settings(main_file, app_name)
+            project_settings = cls.build_kwargs(main_file, app_name)
             config = config_cls(**project_settings, **cls_data)
             Path(config.DATA).mkdir(exist_ok=True, parents=True)
             Path(config.LOG_STORAGE).mkdir(exist_ok=True, parents=True)
@@ -110,8 +162,13 @@ class BaseConfig(BaseSettings, ABC):
         return pformat(self.dict(**dict_kw), **dumps_kw)
 
 
-class _PetriConfig(BaseConfig):
+class _PetriSettings(BaseSettings):
     """DO NOT USE THIS - Used only to bootstrap petri from within."""
+
+    def __init__(self, *args, **kwargs):
+        super(_PetriSettings, self).__init__(*args, **kwargs)
+        if self.APP != "petri":
+            raise ValueError("Only `petri` should use this class")
 
     class Config:  # pylint: disable=missing-docstring,too-few-public-methods
         env_prefix = "PETRI_"
@@ -119,27 +176,3 @@ class _PetriConfig(BaseConfig):
     ENV = "development"
     LOG_LEVEL = LogLevel.ERROR
     LOG_MODE = LogMode.CONSOLE
-
-
-def make_settings(main_file: Path, app_name: str):
-    """Define default values using the `__init__.py` file."""
-    base_path = main_file.parent
-    if main_file.stem == "__init__":
-        package_path, base_path = base_path, base_path.parent
-
-        if app_name != package_path.stem:
-            msg = (
-                f"`app_name={app_name}` supplied, "
-                "but differs from`package_folder={package_path.stem}`"
-            )
-            raise ValueError(msg)
-
-    else:
-        package_path = base_path
-
-    return {
-        "BASEPATH": base_path,
-        "PKG_PATH": package_path,
-        "DATA": Path(base_path).joinpath("data"),
-        "LOG_STORAGE": Path(base_path).joinpath("logs"),
-    }
