@@ -91,6 +91,10 @@ class Metadata:  # pylint: disable=too-few-public-methods,
     def project_name(self) -> str:  # pylint: disable=missing-docstring
         return self.name
 
+    @property
+    def author(self) -> Person:  # pylint: disable=missing-docstring
+        return self.authors[0]
+
     def __init__(self, main_file: Path, pyproject_file: Optional[Path] = None):
         self.pyproject_file = (
             pyproject_file
