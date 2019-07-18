@@ -58,6 +58,14 @@ class BaseSettings(PydanticBaseSettings, ABC):
         return environ.get("PETRI_ENV", "development")
 
     @classmethod
+    def descendants(cls):
+        children = cls.__subclasses__()
+        for child in children.copy():
+            children.extend(child.descendants())
+
+        return children
+
+    @classmethod
     def get_opts(cls, app_name: str = "") -> Optional[dict]:
         """Allow custom `ENV` to be loaded depending on cls."""
 
@@ -73,10 +81,15 @@ class BaseSettings(PydanticBaseSettings, ABC):
             ):  # pylint: disable=unused-argument
                 return True
 
-        return {
+        descendants = {
             child.__fields__["ENV"].default: child
             for child in cls.__subclasses__()
-            if bootstrap_filter(child)
+        }
+        
+        return {
+            default_env: setting_class
+            for default_env, setting_class in descendants.items()
+            if default_env and bootstrap_filter(setting_class)
         }
 
     @staticmethod
