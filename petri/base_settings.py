@@ -85,7 +85,7 @@ class BaseSettings(PydanticBaseSettings, ABC):
 
         descendants = {
             child.__fields__["ENV"].default: child
-            for child in cls.__subclasses__()
+            for child in cls.descendants()
         }
 
         return {
