@@ -59,6 +59,8 @@ class BaseSettings(PydanticBaseSettings, ABC):
 
     @classmethod
     def descendants(cls):
+        """Recursive subclasses."""
+
         children = cls.__subclasses__()
         for child in children.copy():
             children.extend(child.descendants())
@@ -85,7 +87,7 @@ class BaseSettings(PydanticBaseSettings, ABC):
             child.__fields__["ENV"].default: child
             for child in cls.__subclasses__()
         }
-        
+
         return {
             default_env: setting_class
             for default_env, setting_class in descendants.items()
