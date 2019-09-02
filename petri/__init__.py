@@ -13,7 +13,7 @@ Features include::
 
 """
 import os
-from pathlib import Path as _Path
+from pathlib import Path
 
 from .metadata import Metadata
 from .dotenv_ import init_dotenv
@@ -33,8 +33,12 @@ def _initialize(**kwargs):
 
     metadata_ = Metadata(main_file, pyproject_file=pyproject_file)
 
-    dotenv_location_env = os.environ.get("DOTENV_LOCATION", None)
-    dle_path = _Path(dotenv_location_env) if dotenv_location_env else None
+    dle_path = Path(
+        os.environ.get(
+            "DOTENV_LOCATION", Path(os.getcwd()).resolve().joinpath(".env")
+        )
+    )
+
     dotenv_location_ = init_dotenv(path=dle_path, main_file=main_file)
 
     app_name = app_name or metadata_.package_name
@@ -50,7 +54,7 @@ def _initialize(**kwargs):
 
 def initialize(main_file_str: str, app_name: str = "", **kw):
 
-    main_file = _Path(main_file_str)
+    main_file = Path(main_file_str)
     stem = main_file.stem
 
     init_kw = {"main_file": main_file, "app_name": app_name, **kw}
