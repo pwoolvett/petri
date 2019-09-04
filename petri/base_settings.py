@@ -104,7 +104,7 @@ class BaseSettings(PydanticBaseSettings, ABC):
             if app_name != package_path.stem:
                 msg = (
                     f"`app_name={app_name}` supplied, "
-                    "but differs from`package_folder={package_path.stem}`"
+                    f"but differs from `package_folder={package_path.stem}`"
                 )
                 raise ValueError(msg)
 
