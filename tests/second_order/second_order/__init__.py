@@ -3,6 +3,8 @@
 
 from petri import BaseSettings, initialize, LogMode, LogLevel
 
+import a_pkg
+from a_pkg import my_module
 
 class ProdSettings(BaseSettings):
     ENV = "production"

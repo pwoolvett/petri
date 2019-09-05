@@ -21,8 +21,6 @@ services:
       - NOT_PYPI_USERNAME=${NOT_PYPI_USERNAME}
       - NOT_PYPI_PASSWORD=${NOT_PYPI_PASSWORD}
       - PETRI_VERSION=${PETRI_VERSION}
-    # volumes:
-    #   - ../tests/a_pkg:/a_pkg
 
   second_order:
     depends_on:
