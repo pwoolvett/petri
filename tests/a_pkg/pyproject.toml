@@ -16,10 +16,14 @@ readme = "README.rst"
 
 [tool.poetry.dependencies]
 python = "^3.6"
-petri = "^0.22.1"
+petri = "0.22.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^3.0"
+
+[[tool.poetry.source]]
+name = "notpypi"
+url = "http://notpypi:8080/simple/"
 
 [build-system]
 requires = ["poetry>=0.12"]

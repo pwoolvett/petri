@@ -8,7 +8,7 @@ def test_meta():
     assert __meta__.url == "www.second_order.com"
     assert __meta__.license == "A License"
     assert __meta__.name == "second_order"
-    # assert __meta__.version == "1.2.3"
+    assert __meta__.version == "4.5.6"
     assert __meta__.description == "A description"
     assert __meta__.readme == "README.rst"
 

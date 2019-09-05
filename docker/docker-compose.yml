@@ -1,0 +1,44 @@
+version: "3.7"
+services:
+
+  publisher:
+    depends_on:
+      - notpypi
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    environment:
+      - NOT_PYPI_USERNAME=${NOT_PYPI_USERNAME}
+      - NOT_PYPI_PASSWORD=${NOT_PYPI_PASSWORD}
+
+  a_pkg:
+    depends_on:
+      - notpypi
+    build:
+      context: ../tests/a_pkg
+      dockerfile: Dockerfile
+    environment:
+      - NOT_PYPI_USERNAME=${NOT_PYPI_USERNAME}
+      - NOT_PYPI_PASSWORD=${NOT_PYPI_PASSWORD}
+      - PETRI_VERSION=${PETRI_VERSION}
+    # volumes:
+    #   - ../tests/a_pkg:/a_pkg
+
+  second_order:
+    depends_on:
+      - notpypi
+    build:
+      context: ../tests/second_order
+      dockerfile: Dockerfile
+    environment:
+      - NOT_PYPI_USERNAME=${NOT_PYPI_USERNAME}
+      - NOT_PYPI_PASSWORD=${NOT_PYPI_PASSWORD}
+    # volumes:
+    #   - ../tests/second_order:/second_order
+
+  notpypi:
+    image: praekeltfoundation/pypiserver
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./.htpasswd:/.htpasswd

@@ -23,5 +23,5 @@ class TestSettings(BaseSettings):
 
 
 __meta__, DOTENV_LOCATION, SETTINGS, LOGGER, _ = initialize(
-    __file__, "a_package"
+    __file__, __package__
 )
