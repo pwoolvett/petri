@@ -142,7 +142,4 @@ def test_import_from_package(project_init):
     )
     meta = pkg.__meta__
     for name in ("name", "version"):
-        try:
-            assert getattr(meta, name) == expected_[name]
-        except KeyError:
-            import pdb; pdb.set_trace()
+        assert getattr(meta, name) == expected_[name]
