@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 """Settings  boilerplate."""
 
+import logging
 from abc import ABC
 from os import environ
-import logging
 from pathlib import Path
 from pprint import pformat
 from typing import Optional
-from typing import TypeVar
 from typing import Type
+from typing import TypeVar
 
-from pydantic import ValidationError
 from pydantic import BaseSettings as PydanticBaseSettings
+from pydantic import ValidationError
 
-from .logging_ import LogLevel, LogMode
+from .logging_ import LogLevel
+from .logging_ import LogMode
 
 Conf = TypeVar("Conf", bound="BaseSettings")
 """Generic variable that can be 'BaseSettings', or any subclass."""

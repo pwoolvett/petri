@@ -27,7 +27,9 @@ def setup_module():
     log_folder.mkdir(exist_ok=False)
 
     from pydantic import utils
+
     utils.in_ipython = lambda x: True
+
 
 def teardown_module():
 

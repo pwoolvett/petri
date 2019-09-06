@@ -2,12 +2,11 @@
 """Meta-info for the project, as read from`pyproject.toml`"""
 
 import logging
-
 from pathlib import Path
-import toml
 
-from importlib_metadata import distribution
+import toml
 from importlib_metadata import PackageNotFoundError
+from importlib_metadata import distribution
 
 
 class Metadata:

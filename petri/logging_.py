@@ -4,10 +4,10 @@
 
 import logging
 from datetime import datetime
-from enum import IntFlag
 from enum import IntEnum
-from typing import Callable
+from enum import IntFlag
 from pathlib import Path
+from typing import Callable
 
 import autologging
 import logzero

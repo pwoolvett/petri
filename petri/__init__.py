@@ -15,10 +15,13 @@ Features include::
 import os
 from pathlib import Path
 
-from .metadata import Metadata
-from .dotenv_ import init_dotenv
-from .logging_ import create_logger, LogLevel, LogMode, make_tqdm
 from .base_settings import BaseSettings
+from .dotenv_ import init_dotenv
+from .logging_ import LogLevel
+from .logging_ import LogMode
+from .logging_ import create_logger
+from .logging_ import make_tqdm
+from .metadata import Metadata
 
 
 def initialize(main_file_str: str, app_name: str, **kw):
