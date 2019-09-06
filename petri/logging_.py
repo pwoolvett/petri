@@ -100,11 +100,12 @@ def _attach_file_handler(filename, _logger, file_formatter, level):
 
 
 def create_logger(
-    level: LogLevel, mode: LogMode, log_storage: Path
+    name: str, level: LogLevel, mode: LogMode, log_storage: Path
 ) -> logging.Logger:
     """Configures custom  logger to files/console/db.
 
     Args:
+        name: The name of the logger
         level: The logging level for the logger.
         mode: Where to log. See `LogMode`.
         log_storage: Where to store logs.
@@ -122,7 +123,7 @@ def create_logger(
         raise NotImplementedError("RDBMS-based logging not implemented")
 
     _logger = logzero.setup_logger(
-        name=__package__,
+        name=name,
         level=level,
         formatter=Console(),
         disableStderrLogger=not requires_console,

@@ -1,3 +1,7 @@
+=====
+PETRI
+=====
+
 .. image:: https://travis-ci.org/pwoolvett/petri.svg?branch=master
     :target: https://travis-ci.org/pwoolvett/petri
     :alt: Build Status
@@ -28,13 +32,14 @@ Summary
 -------
 Avoid boilerplate python code.
 
-Importing petri automagically equips your script/pacakage with:
+Importing petri automagically equips your pacakage with:
 
-* settings using pydantic.
-* dotenv file handling using python-dotenv.
-* logging config using logzero&autologging.
-* project metadata from a pyproject.toml file.
-* environment (prod/dev/test) handling via ENV environment variable.
+* Settings using pydantic.
+* Dotenv file handling using python-dotenv.
+* Logging config using logzero&autologging.
+* Environment (prod/dev/test) handling via ENV environment variable.
+* Package metadata [Only for installed packages].
+
 
 Screenshots
 -----------
@@ -42,7 +47,7 @@ Screenshots
 .. image:: static/screenshots/api.png
 
 
-Code Example
+Sample usage
 ------------
 
 * see tests/data folder
@@ -77,13 +82,13 @@ Contribute
 ----------
 
 - Development
-   
+
    + Make sure to pass tox tests (including those with `--runslow`).
    + For tests design, you can use use ´@pytest.mark.incremental´ and  ´@pytest.mark.slow´. See "catalogo_db/tests/conftest.py"
    + If the requirements change, make sure to re-build all images
 
 - Versioning
-   
+
    + Use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/pwoolvett/petri/tags).
 
 Support

@@ -21,48 +21,27 @@ from .logging_ import create_logger, LogLevel, LogMode, make_tqdm
 from .base_settings import BaseSettings
 
 
-# pylint: disable=missing-docstring
-
-
-def _initialize(**kwargs):
+def initialize(main_file_str: str, app_name: str, **kw):
     """Instantiates all objects using a single python file."""
 
-    main_file = kwargs["main_file"]
-    pyproject_file = kwargs.get("pyproject_file")
-    app_name = kwargs.get("app_name")
+    main_file = Path(main_file_str)
 
-    metadata_ = Metadata(main_file, pyproject_file=pyproject_file)
+    metadata_ = Metadata(app_name, main_file_str)
 
-    dle_path = Path(
-        os.environ.get(
-            "DOTENV_LOCATION", Path(os.getcwd()).resolve().joinpath(".env")
-        )
-    )
+    dotenv_location_ = init_dotenv()
 
-    dotenv_location_ = init_dotenv(path=dle_path, main_file=main_file)
-
-    app_name = app_name or metadata_.package_name
     settings_ = BaseSettings.from_env(main_file, app_name)
+
     logger_ = create_logger(
-        settings_.LOG_LEVEL, settings_.LOG_MODE, settings_.LOG_STORAGE
+        app_name,
+        settings_.LOG_LEVEL,
+        settings_.LOG_MODE,
+        settings_.LOG_STORAGE,
     )
 
     tqdm_ = make_tqdm(settings_.ENV)
 
     return metadata_, dotenv_location_, settings_, logger_, tqdm_
-
-
-def initialize(main_file_str: str, app_name: str = "", **kw):
-
-    main_file = Path(main_file_str)
-    stem = main_file.stem
-
-    init_kw = {"main_file": main_file, "app_name": app_name, **kw}
-
-    if stem != "__init__":
-        init_kw["pyproject_file"] = main_file.parent.joinpath("pyproject.toml")
-
-    return _initialize(**init_kw)
 
 
 # pylint: disable=invalid-name

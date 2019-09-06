@@ -3,6 +3,7 @@
 
 from abc import ABC
 from os import environ
+import logging
 from pathlib import Path
 from pprint import pformat
 from typing import Optional
@@ -133,11 +134,12 @@ class BaseSettings(PydanticBaseSettings, ABC):
             raise ResourceWarning(msg)
 
         try:
-            env = cls.read_env(app_name) or cls_data["env"]
+            env = cls.read_env(app_name) or cls_data["ENV"]
         except KeyError as err:
             msg = "no `ENV` supplied"
-            msg += f". Options: `{list(opts.keys())}`"
-            raise KeyError(msg) from err
+            msg += f". Attempting: `development`"
+            logging.warning(msg)
+            env = "development"
 
         try:
             config_cls: Type[Conf] = opts[env]
@@ -175,6 +177,9 @@ class BaseSettings(PydanticBaseSettings, ABC):
         dict_kw = dict_kw or {}
 
         return pformat(self.dict(**dict_kw), **dumps_kw)
+
+    def __str__(self):
+        return self.to_str()
 
 
 class _PetriSettings(BaseSettings):
