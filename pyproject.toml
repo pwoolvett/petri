@@ -13,7 +13,7 @@ authors = [
   "Pablo Woolvett <pablowoolvett@gmail.com>"
 ]
 readme = "README.rst"
-include = ["pyproject.toml"]
+include = []
 
 [tool.poetry.scripts]
 petri = 'petri.__main__:_main'
