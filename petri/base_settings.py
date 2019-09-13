@@ -51,15 +51,6 @@ class BaseSettings(PydanticBaseSettings, ABC):
         env_prefix = ""
 
     @classmethod
-    def read_env(cls, app_name: str = "") -> Optional[str]:
-        """Allow custom `ENV` to be loaded depending on cls."""
-
-        if app_name != "petri":
-            return environ.get("ENV")
-
-        return environ.get("PETRI_ENV", "development")
-
-    @classmethod
     def descendants(cls):
         """Recursive subclasses."""
 
@@ -87,7 +78,7 @@ class BaseSettings(PydanticBaseSettings, ABC):
 
         descendants = {
             child.__fields__["ENV"].default: child
-            for child in cls.descendants()
+            for child in (cls, *cls.descendants())
         }
 
         return {
@@ -127,6 +118,8 @@ class BaseSettings(PydanticBaseSettings, ABC):
     ) -> Conf:
         """Allows instantiation from a single variable."""
 
+        # import pdb; pdb.set_trace()
+
         opts = cls.get_opts(app_name)
 
         if not opts:
@@ -134,21 +127,28 @@ class BaseSettings(PydanticBaseSettings, ABC):
             msg += f". Create one equipped with a default `ENV` (test/dev,etc)"
             raise ResourceWarning(msg)
 
-        try:
-            env = cls.read_env(app_name) or cls_data["ENV"]
-        except KeyError as err:
-            msg = "no `ENV` supplied"
-            msg += f". Attempting: `development`"
-            logging.warning(msg)
-            env = "development"
+        env = environ.get(f"{cls.Config.env_prefix}ENV") or cls_data.get("ENV")
 
-        try:
-            config_cls: Type[Conf] = opts[env]
-        except KeyError as err:
-            msg = "invalid `ENV` supplied"
-            msg += f". Received: `{env}`"
-            msg += f". Options: `{list(opts.keys())}`"
-            raise KeyError(msg) from err
+        config_cls: Type[Conf]
+        if env:
+            try:
+                config_cls = opts[env]
+            except KeyError as err:
+                msg = "Invalid `ENV` supplied"
+                msg += f". Received: `{env}`"
+                msg += f". Options: `{list(opts.keys())}`"
+                raise KeyError(msg) from err
+        else:
+            default_opts = [
+                config
+                for config in opts.values()
+                if config.__fields__.get(
+                    'IS_DEFAULT',
+                    {'default': False}
+                ).default or False
+            ]
+            assert len(opts) == 1
+            config_cls = default_opts[0]
 
         try:
             project_settings = cls.build_kwargs(main_file, app_name)
@@ -194,6 +194,7 @@ class _PetriSettings(BaseSettings):
     class Config:  # pylint: disable=missing-docstring,too-few-public-methods
         env_prefix = "PETRI_"
 
-    ENV = "development"
+    IS_DEFAULT = True
+    ENV = "production"
     LOG_LEVEL = LogLevel.ERROR
     LOG_MODE = LogMode.CONSOLE

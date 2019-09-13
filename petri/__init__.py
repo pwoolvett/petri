@@ -3,9 +3,9 @@
 
 Features include::
 
-    * lazy-loading of project metadata from pyproject.toml
-    * pre-loading a dotenv file
-    * equipping a package/app/script/module with a pre-configured logger
+    * Lazy-loading of project metadata from pyproject.toml.
+    * Pre-loading a dotenv file.
+    * Equipping a package/app/script/module with a pre-configured logger.
 
 
 .. versionadded:: 0.1.0
@@ -14,17 +14,21 @@ Features include::
 """
 import os
 from pathlib import Path
+from typing import Type
 
-from .base_settings import BaseSettings
-from .dotenv_ import init_dotenv
-from .logging_ import LogLevel
-from .logging_ import LogMode
-from .logging_ import create_logger
-from .logging_ import make_tqdm
-from .metadata import Metadata
+from petri.base_settings import BaseSettings
+from petri.base_settings import _PetriSettings
+from petri.dotenv_ import init_dotenv
+from petri.logging_ import LogLevel
+from petri.logging_ import LogMode
+from petri.logging_ import create_logger
+from petri.logging_ import make_tqdm
+from petri.metadata import Metadata
 
 
-def initialize(main_file_str: str, app_name: str, **kw):
+def initialize(
+    main_file_str: str, app_name: str, settings_cls: Type[BaseSettings], **kw
+):
     """Instantiates all objects using a single python file."""
 
     main_file = Path(main_file_str)
@@ -33,7 +37,7 @@ def initialize(main_file_str: str, app_name: str, **kw):
 
     dotenv_location_ = init_dotenv()
 
-    settings_ = BaseSettings.from_env(main_file, app_name)
+    settings_ = settings_cls.from_env(main_file, app_name)
 
     logger_ = create_logger(
         app_name,
@@ -48,4 +52,8 @@ def initialize(main_file_str: str, app_name: str, **kw):
 
 
 # pylint: disable=invalid-name
-__meta__, DOTENV_LOCATION, SETTINGS, logger, _ = initialize(__file__, "petri")
+__meta__, DOTENV_LOCATION, SETTINGS, logger, _ = initialize(
+    __file__,
+    "petri",
+    _PetriSettings,
+)

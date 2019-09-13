@@ -1,6 +1,5 @@
 version: "3.7"
 services:
-
   publisher:
     depends_on:
       - notpypi
@@ -10,6 +9,8 @@ services:
     environment:
       - NOT_PYPI_USERNAME=${NOT_PYPI_USERNAME}
       - NOT_PYPI_PASSWORD=${NOT_PYPI_PASSWORD}
+    volumes:
+      - ./.coverage.publish:/petri/.coverage
 
   a_pkg:
     depends_on:
@@ -21,6 +22,8 @@ services:
       - NOT_PYPI_USERNAME=${NOT_PYPI_USERNAME}
       - NOT_PYPI_PASSWORD=${NOT_PYPI_PASSWORD}
       - PETRI_VERSION=${PETRI_VERSION}
+    volumes:
+      - ./.coverage.pkg:/petri/.coverage
 
   second_order:
     depends_on:
@@ -31,8 +34,8 @@ services:
     environment:
       - NOT_PYPI_USERNAME=${NOT_PYPI_USERNAME}
       - NOT_PYPI_PASSWORD=${NOT_PYPI_PASSWORD}
-    # volumes:
-    #   - ../tests/second_order:/second_order
+    volumes:
+      - ./.coverage.second_hand:/petri/.coverage
 
   notpypi:
     image: praekeltfoundation/pypiserver
