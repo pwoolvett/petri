@@ -20,11 +20,9 @@ PETRI
    :alt: Maintainability
 
 .. image:: https://img.shields.io/badge/python%20version-3.6.7-275479.svg
-   :target: https://img.shields.io/badge/python%20version-3.6.7-275479.svg
    :alt: Python Version
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-   :target: https://img.shields.io/badge/code%20style-black-000000.svg
    :alt: Code Style
 
 
@@ -32,11 +30,11 @@ Summary
 -------
 Avoid boilerplate python code.
 
-Importing petri automagically equips your pacakage with:
+Importing petri automagically equips your app/pacakage with:
 
 * Settings using pydantic.
 * Dotenv file handling using python-dotenv.
-* Logging config using logzero&autologging.
+* Logging config using logzero + autologging.
 * Environment (prod/dev/test) handling via ENV environment variable.
 * Package metadata [Only for installed packages].
 
@@ -84,12 +82,15 @@ Contribute
 - Development
 
    + Make sure to pass tox tests (including those with `--runslow`).
-   + For tests design, you can use use ´@pytest.mark.incremental´ and  ´@pytest.mark.slow´. See "catalogo_db/tests/conftest.py"
+   + For tests design, you can use use ´@pytest.mark.incremental´ and
+     ´@pytest.mark.slow´. See "petri/tests/conftest.py"
    + If the requirements change, make sure to re-build all images
 
 - Versioning
 
-   + Use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/pwoolvett/petri/tags).
+   + Use `SemVer <http://semver.org/>`_ for versioning. For the versions available, see
+     the `tags on this repository <https://github.com/pwoolvett/petri/tags>`_.
+
 
 Support
 -------
