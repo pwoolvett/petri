@@ -51,12 +51,7 @@ bandit = "^1.6"
 docformatter = "^1.1"
 tqdm = "^4.32"
 "sphinxcontrib.apidoc" = "^0.3.0"
-blackini = "^0.1.4"
-
-[tool.black]
-line-length = 79
-target-version = ['py36']
-quiet = true
+blackini = "^0.1.5"
 
 [build-system]
 requires = ["poetry>=0.12"]
