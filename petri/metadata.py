@@ -28,10 +28,7 @@ class Metadata:
 
         pyproject_file = folder.joinpath("pyproject.toml")
         tool = toml.load(pyproject_file)["tool"]
-        return {
-            k: v
-            for k, v in tool["poetry"].items()
-        }
+        return {k: v for k, v in tool["poetry"].items()}
 
     def __getattribute__(self, name):
         try:
