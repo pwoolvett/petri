@@ -1,15 +1,21 @@
 import pytest
 
-
-def test_import():
-    import petri
-
-    meta = petri.__meta__
-    assert meta
+from tests.unit import a_pkg_import
 
 
-def test_non_existent():
-    from petri import __meta__
+@pytest.fixture(scope="function")
+def read_meta(a_pkg_import):
+    a_pkg = a_pkg_import()
+    return a_pkg.pkg.meta
 
-    with pytest.raises(AttributeError):
-        __meta__.asdhjlghksd  # pylint: disable=pointless-statement
+
+def test_meta(read_meta):
+    expected = {
+        "name": "a-pkg",
+        "version": "1.2.3",
+        "author": "Author Name",
+        "author-email": "author@mail.com",
+        "summary": "A description",
+    }
+    for name, value in expected.items():
+        assert getattr(read_meta, name) == value

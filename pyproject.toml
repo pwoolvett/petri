@@ -1,57 +1,49 @@
-[tool.meta]
-release = "pre-alpha"
-maintainer = "Pablo Woolvett <pablowoolvett@gmail.com>"
-copyright = ""
-url = "https://www.github.com/pwoolvett/petri"
-license = "MIT"
-
 [tool.poetry]
 name = "petri"
-version = "0.22.4"
-description = "Handle project/application config from pyproject.toml"
+version = "0.23.0"
+description = "Python projects (app/lib) config initializator."
+license = "Unlicense"
 authors = [
   "Pablo Woolvett <pablowoolvett@gmail.com>"
 ]
 readme = "README.rst"
-include = []
-
-[tool.poetry.scripts]
-petri = 'petri.__main__:_main'
+homepage = "https://pypi.org/project/petri/"
+repository = "https://github.com/pwoolvett/petri"
+documentation = "https://petri.readthedocs.io/en/stable/"
+keywords = [
+  "pyproject.toml",
+  "dotenv",
+  "boilerplate",
+  "pydantic",
+  "log"
+]
 
 [tool.poetry.dependencies]
-python = "^3.6"
-python-dotenv= "^0.10"
-logzero= "^1.5"
-toml= "^0.10"
-pydantic= "^0.30"
-autologging = "^1.3"
-tzlocal = "^1.5"
-importlib_metadata = "^0.20"
+python = "^3.7"
+python-dotenv = "^0.10.3"
+pydantic = "^0.32.2"
+
+doc8 = {version = "^0.8.0", optional = true}
+docutils = {version = "^0.15.2", optional = true}
+pytest-html = "^2.0.0"
+
 
 [tool.poetry.dev-dependencies]
-black = { version = "*", allows-prereleases = true }
-autopep8 = "^1.4"
-pylint = "^2.3"
-flake8 = "^3.7"
-flake8-bugbear = "^19.3"
-mypy = "^0.701"
-mypy-extensions = "^0.4"
-coverage = "^4.5"
-pytest-cov = "^2.6"
-hypothesis = "^4.17"
-behave = "^1.2"
-Sphinx = "^1.8"
-doc8 = "^0.8"
-sphinx_rtd_theme = "^0.4.2"
-sphinx-autodoc-typehints = "^1.5"
-sphinx-autobuild = "^0.7.1"
-pytest = "^4.0"
-pep8 = "^1.7"
-bandit = "^1.6"
-docformatter = "^1.1"
-tqdm = "^4.32"
-"sphinxcontrib.apidoc" = "^0.3.0"
-blackini = "^0.1.5"
+pip = "^19.2.3"
+blackini = "^0.1.6"
+pytest = "^5.1.2"
+autopep8 = "^1.4.4"
+isort = "^4.3.21"
+docformatter = "^1.3"
+flake8 = "^3.7.8"
+mypy = "^0.720"
+bandit = "^1.6.2"
+
+a-pkg = {path = "examples/a_pkg", develop = false}
+pytest-cov = "^2.7.1"
+
+[tool.poetry.extras]
+docs = ["doc8", "docutils"]
 
 [build-system]
 requires = ["poetry>=0.12"]

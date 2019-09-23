@@ -1,59 +1,40 @@
-# coding=utf-8
-"""Handle project/application config from pyproject.toml.
-
-Features include::
-
-    * Lazy-loading of project metadata from pyproject.toml.
-    * Pre-loading a dotenv file.
-    * Equipping a package/app/script/module with a pre-configured logger.
-
-
-.. versionadded:: 0.1.0
-   Initial version.
-
-"""
-import os
+from importlib import import_module
 from pathlib import Path
-from typing import Type
+from typing import Optional
 
-from petri.base_settings import BaseSettings
-from petri.base_settings import _PetriSettings
-from petri.dotenv_ import init_dotenv
-from petri.logging_ import LogLevel
-from petri.logging_ import LogMode
-from petri.logging_ import create_logger
-from petri.logging_ import make_tqdm
+from petri.dot_env import init_dotenv
 from petri.metadata import Metadata
+from petri.settings import BaseSettings
+
+__version__ = "0.23.0"
 
 
-def initialize(
-    main_file_str: str, app_name: str, settings_cls: Type[BaseSettings], **kw
-):
-    """Instantiates all objects using a single python file."""
+def setup_logging():
+    root_logger = logging.getLogger()
+    root_logger.addHandler(console_handler)
+    root_logger.setLevel(logging.DEBUG)
 
-    main_file = Path(main_file_str)
-
-    metadata_ = Metadata(app_name, main_file_str)
-
-    dotenv_location_ = init_dotenv()
-
-    settings_ = settings_cls.from_env(main_file, app_name)
-
-    logger_ = create_logger(
-        app_name,
-        settings_.LOG_LEVEL,
-        settings_.LOG_MODE,
-        settings_.LOG_STORAGE,
-    )
-
-    tqdm_ = make_tqdm(settings_.ENV)
-
-    return metadata_, dotenv_location_, settings_, logger_, tqdm_
+    # Disable requests logging
+    logging.getLogger("requests").propagate = False
 
 
-# pylint: disable=invalid-name
-__meta__, DOTENV_LOCATION, SETTINGS, logger, _ = initialize(
-    __file__,
-    "petri",
-    _PetriSettings,
-)
+class Petri:
+    @staticmethod
+    def pkg_2_envvar(name: str) -> str:
+        return name.replace("-", "_").upper() + "_CONFIG"
+
+    def __init__(self, init_dot_py: str, default_config: Optional[str] = None):
+        self.__init_dot_py = init_dot_py
+        self.__package = str(Path(init_dot_py).parent.stem)
+        self.__default_config = default_config
+
+        self.env_file: Optional[str] = init_dotenv()
+        self.meta = Metadata(self.__package)
+        self.settings = BaseSettings.from_envvar(
+            self.pkg_2_envvar(self.__package),
+            init_dot_py=self.__init_dot_py,
+            default_config=self.__default_config,
+        )
+
+
+pkg = Petri(__file__, default_config="petri.settings:_PetriSettings")

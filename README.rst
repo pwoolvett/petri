@@ -2,97 +2,54 @@
 PETRI
 =====
 
-.. image:: https://travis-ci.org/pwoolvett/petri.svg?branch=master
-    :target: https://travis-ci.org/pwoolvett/petri
-    :alt: Build Status
-
-.. image:: https://readthedocs.org/projects/petri/badge/?version=latest
-   :target: https://petri.readthedocs.io/en/latest/?badge=latest
-   :alt: Documentation Status
-
-.. image:: https://api.codeclimate.com/v1/badges/f0f976249fae332a0bab/test_coverage
-   :target: https://codeclimate.com/github/pwoolvett/petri/test_coverage
-   :alt: Test Coverage
-
-
-.. image:: https://api.codeclimate.com/v1/badges/f0f976249fae332a0bab/maintainability
-   :target: https://codeclimate.com/github/pwoolvett/petri/maintainability
-   :alt: Maintainability
-
-.. image:: https://img.shields.io/badge/python%20version-3.6.7-275479.svg
-   :alt: Python Version
-
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-   :alt: Code Style
-
-
 Summary
 -------
 Avoid boilerplate python code.
 
 Importing petri automagically equips your app/pacakage with:
 
-* Settings using pydantic.
 * Dotenv file handling using python-dotenv.
+* Package metadata (for installed packages), using importlib_metadata.
+* Settings using pydantic.
 * Logging config using logzero + autologging.
-* Environment (prod/dev/test) handling via ENV environment variable.
-* Package metadata [Only for installed packages].
+* Environment switching (prod/dev/test) handling via ENV environment variable.
 
-
-Screenshots
------------
-
-.. image:: static/screenshots/api.png
-
-
-Sample usage
-------------
-
-* see tests/data folder
-
-
-Requirements
-------------
-
-- Usage requirements
-
-   + python>=3.6
-
-- Development requirements
-
-   + tox
-   + poetry (recommended)
-
-
-Installation
-------------
-
-- pip install petri
-
-Testing
+Install
 -------
 
-- run `tox -e venv` to create an appropiate virtualenv
-- `tox` to run the full test suite
+Install using `poetry` or `pip`:
 
+- Poetry::
 
-Contribute
-----------
+    poetry add petri
 
-- Development
+- pip::
 
-   + Make sure to pass tox tests (including those with `--runslow`).
-   + For tests design, you can use use ´@pytest.mark.incremental´ and
-     ´@pytest.mark.slow´. See "petri/tests/conftest.py"
-   + If the requirements change, make sure to re-build all images
+    pip install petri
 
-- Versioning
+Usage
+-----
 
-   + Use `SemVer <http://semver.org/>`_ for versioning. For the versions available, see
-     the `tags on this repository <https://github.com/pwoolvett/petri/tags>`_.
+Define dev/prod/test settings:
 
+  .. include:: examples/a_pkg/a_pkg/settings.py
 
-Support
--------
+IMPORTANT: Make sure to set
+`Config.env_prefix=[package_name].upper().replace('-' ,'_')+'_'`.
+In this example, `a-pkg` turns into `A_PKG_`
 
-If you are having issues, please file an issue in github.
+Instantiate `petri.Petri` form your package's `__init__.py`, like so:
+
+  .. include:: examples/a_pkg/a_pkg/__init__.py
+
+Under the hood, petri takes care of the following:
+
+- If the environment variable `env_file` is set, petri will load its contents.
+- Your package's metadata (version, author, etc) is now available in
+  `pkg.meta` (lazy-loaded to avoid reading files unnecessarily).
+- Select settings: either
+  (a) Set the envvar `[package_name].replace("-", "_").upper() + "_CONFIG"` to
+  a defined settings class (eg: `A_PKG_CONFIG=a_pkg.settings:Production`), or
+  (b) Use the `default_config` kwarg when instantiating `petri.Petri`.
+  (Of course, you can use both...)
+- Settings are available in `pkg.settings` (https://pydantic-docs.helpmanual.io/#id5)
