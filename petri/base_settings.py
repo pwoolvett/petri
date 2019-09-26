@@ -182,7 +182,7 @@ class _PetriSettings(BaseSettings):
 
     def __init__(self, *args, **kwargs):
         super(_PetriSettings, self).__init__(*args, **kwargs)
-        if self.APP != "petri":
+        if self.APP != "petri":  # pylint: disable=no-member
             raise ValueError("Only `petri` should use this class")
 
     class Config:  # pylint: disable=missing-docstring,too-few-public-methods

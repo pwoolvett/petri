@@ -157,7 +157,7 @@ def make_tqdm(env: str) -> Callable:
         return lambda x: x
 
     try:
-        import tqdm
+        import tqdm  # pylint: disable=import-outside-toplevel, import-error
 
         return tqdm.tqdm
     except ModuleNotFoundError:
