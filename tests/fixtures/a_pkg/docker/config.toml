@@ -1,0 +1,7 @@
+[settings]
+[settings.virtualenvs]
+create = false
+
+[repositories]
+[repositories.notpypi]
+url = "http://notpypi:8080/"

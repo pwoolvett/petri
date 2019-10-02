@@ -1,54 +1,65 @@
 [tool.poetry]
 name = "petri"
 version = "0.23.0"
-description = "Python projects (app/lib) config initializator."
+description = "Free your python code from 12-factor boilerplate."
 license = "Unlicense"
 authors = [
-  "Pablo Woolvett <pablowoolvett@gmail.com>"
+    "Pablo Woolvett <pablowoolvett@gmail.com>",
 ]
 readme = "README.rst"
 homepage = "https://pypi.org/project/petri/"
 repository = "https://github.com/pwoolvett/petri"
 documentation = "https://petri.readthedocs.io/en/stable/"
 keywords = [
-  "pyproject.toml",
-  "dotenv",
-  "boilerplate",
-  "pydantic",
-  "log"
+    "pyproject.toml",
+    "dotenv",
+    "boilerplate",
+    "12-factor",
+    "pydantic",
+    "log",
 ]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.6"
 python-dotenv = "^0.10.3"
 pydantic = "^0.32.2"
-
-doc8 = {version = "^0.8.0", optional = true}
-docutils = {version = "^0.15.2", optional = true}
-pytest-html = "^2.0.0"
 structlog = "^19.1.0"
-autologging = "^1.3.2"
-python-logstash = "^0.4.6"
+importlib_metadata = "^0.23"
 
+colorama = {version = "^0.4.1", optional = true}
 
 [tool.poetry.dev-dependencies]
 pip = "^19.2.3"
+
+# format
 blackini = "^0.1.6"
-pytest = "^5.1.2"
-autopep8 = "^1.4.4"
 isort = "^4.3.21"
+autopep8 = "^1.4.4"
 docformatter = "^1.3"
+
+# lint
 flake8 = "^3.7.8"
+flake8-bugbear = "^19.8.0"
 mypy = "^0.720"
 bandit = "^1.6.2"
+pylint = "^2.4.1"
 
-a-pkg = {path = "examples/a_pkg"}
+# test
+pytest = "^5.1.2"
+pytest-html = "^2.0.0"
 pytest-cov = "^2.7.1"
-colorama = "^0.4.1"
+
+# doc
+doc8 = "^0.8.0"
+docutils = "^0.15.2"
+
 
 [tool.poetry.extras]
-docs = ["doc8", "docutils"]
+color = [ "colorama", ]
+docs = [ "doc8", "docutils", ]
+pytest = [ "pytest", "pytest-html", "pytest-cov" ]
+lint = [ "flake8", "flake8-bugbear", "mypy", "bandit", "pylint", ]
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = [ "poetry>=0.12",]
 build-backend = "poetry.masonry.api"

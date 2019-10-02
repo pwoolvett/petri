@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  publisher:
+    depends_on:
+      - notpypi
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+
+  a_pkg:
+    depends_on:
+      - notpypi
+    build:
+      context: ../tests/fixtures/a_pkg
+      dockerfile: docker/Dockerfile
+    environment:
+      - PETRI_VERSION=${PETRI_VERSION}
+
+  second_order:
+    depends_on:
+      - notpypi
+    build:
+      context: ../tests/fixtures/second_order
+      dockerfile: docker/Dockerfile
+
+  notpypi:
+    image: praekeltfoundation/pypiserver
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./.htpasswd:/.htpasswd

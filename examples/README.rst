@@ -1,5 +1,6 @@
 Sample Usage for Petri
 ----------------------
 
+TODO: add asciinema recording of usage
 
-- a_pkg: just run `poetry add petri` in the `a_pkg` folder.
+See tests/fixtures/a_pkg

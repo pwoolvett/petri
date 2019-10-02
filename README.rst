@@ -2,16 +2,17 @@
 PETRI
 =====
 
+Free your python code from 12-factor boilerplate.
+
 Summary
 -------
-Avoid boilerplate python code.
 
-Importing petri automagically equips your app/pacakage with:
+Importing petri equips your app/pacakage with:
 
 * Dotenv file handling using python-dotenv.
 * Package metadata (for installed packages), using importlib_metadata.
 * Settings using pydantic.
-* Logging config using logzero + autologging.
+* Logging config using structlog.
 * Environment switching (prod/dev/test) handling via ENV environment variable.
 
 Install
@@ -39,7 +40,7 @@ Usage
 
   IMPORTANT: Make sure to set
   `Config.env_prefix=[package_name].upper().replace('-' ,'_')+'_'`.
-  In this example, `a-pkg` turns into `A_PKG_`
+  In this example, a package named `a-pkg` turns into `A_PKG_`
 
 - Select which class of setting to use, by doing one of the folowing:
 
@@ -62,5 +63,5 @@ This allows petri to:
   `pkg.meta` (lazy-loaded to avoid reading metadata files unnecessarily).
 - Activate and instantiate a settings class, according to environment var and
   default, available in `pkg.settings` (https://pydantic-docs.helpmanual.io/#id5)
-- Configure and expose a logger, available in `pkg.logger`, which uses
+- Configure and expose a logger, available in `pkg.log`, which uses
   configuration defined in your settings.

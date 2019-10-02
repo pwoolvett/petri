@@ -1,14 +1,12 @@
 # coding=utf-8
 """`.env` file handling ."""
 
-import logging
 import os
 from pathlib import Path
 from typing import Optional
 
 from dotenv import find_dotenv
 from dotenv import load_dotenv
-from pydantic import validator
 
 
 def init_dotenv() -> Optional[str]:

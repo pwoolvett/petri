@@ -2,46 +2,74 @@
 """Settings  boilerplate, loosely based on flask's."""
 
 import logging
+import os
 from abc import ABC
 from importlib import import_module
-import os
 from pathlib import Path
 from pprint import pformat
-
-from typing import Any
-from typing import Dict
 from typing import Optional
-from typing import Type
 from typing import TypeVar
 
 from pydantic import BaseSettings as PydanticBaseSettings
-from pydantic import ValidationError
+from pydantic import validator
 
+from petri.loggin import LogDest
+from petri.loggin import LogFormatter
+from petri.loggin import LogLevel
 
 Conf = TypeVar("Conf", bound="BaseSettings")
 """Generic variable that can be 'BaseSettings', or any subclass."""
+
+FORMAT_SEL = "[package.]module:class"
 
 
 class BaseSettings(PydanticBaseSettings, ABC):
     """Boilerplate for config loading and dotenv handling."""
 
-    BASEPATH: Path
+    INIT_DOT_PY: str = None  # type: ignore
+    """Location of the ``package/__init__.py``."""
+
+    BASEPATH: Path = None  # type: ignore
     """Absolute path to the project directory"""
 
-    PKG_PATH: Path
+    PKG_PATH: Path = None  # type: ignore
     """Absolute path to the package directory"""
 
-    DATA: Path
+    DATA: Path = None  # type: ignore
     """Absolute path to the package directory"""
 
-    # LOG_LEVEL: LogLevel
-    # """Defines the logging level of the Application"""
+    LOG_LEVEL: LogLevel = LogLevel.WARNING
+    """Defines the logging level of the Application"""
 
-    # LOG_MODE: LogMode
-    # """Define allowed destinations for logs"""
+    LOG_DEST: LogDest = LogDest.CONSOLE
+    """Define allowed destinations for logs"""
 
-    LOG_STORAGE: Path
-    """Where to store the log files if `LOG_MODE` uses any"""
+    LOG_FMT: LogFormatter = LogFormatter.COLOR
+    """Define allowed formats for logs."""
+
+    LOG_STORAGE: Path = None  # type: ignore
+    """Where to store the log file."""
+
+    @validator("BASEPATH", pre=True, always=True)
+    def validate_basepath(cls, v, values):  # pylint: disable=E0213,R0201
+        """Dynamically defined as ``__init__.py``'s folder."""
+        init_dot_py = values["INIT_DOT_PY"]
+        return v or Path(init_dot_py).parent
+
+    @validator("PKG_PATH", pre=True, always=True)
+    def validate_pkg_path(cls, v, values):  # pylint: disable=E0213,R0201
+        """Dynamically defined as ``__init__.py``'s folder's parent."""
+        return v or values["BASEPATH"].parent
+
+    @validator("DATA", pre=True, always=True)
+    def validate_data(cls, v, values):  # pylint: disable=E0213,R0201
+        """Dynamically defined as ``__init__.py``'s folder's sibling."""
+        return v or Path(values["BASEPATH"]).joinpath("data")
+
+    @validator("LOG_STORAGE", pre=True, always=True)
+    def validate_log_storage(cls, v, values):  # pylint: disable=E0213,R0201
+        """Dynamically defined in ``__init__.py``'s folder's sibling."""
+        return v or Path(values["BASEPATH"]).joinpath("logs") / "logs.log"
 
     class Config:  # pylint: disable=missing-docstring,too-few-public-methods
         env_prefix = ""
@@ -64,38 +92,27 @@ class BaseSettings(PydanticBaseSettings, ABC):
         try:
             value = os.environ[name]
         except KeyError as no_env:
-            msg = f"Environment Variable {name} not found."
+            msg = f"Environment Variable `{name}` not found."
             if default_config is None:
+                msg += " Either supply it indicating the class to load"
+                msg += (
+                    ", or instantiate `Petri` with a `default_config` kwarg."
+                )
+                msg += f" In any case, the format must be `{FORMAT_SEL}`."
                 raise KeyError(msg) from no_env
             logging.info(msg)
             value = default_config
 
         try:
             module, setting_cls = value.split(":")
-        except ValueError as no_colon:
+        except ValueError as wrong_fmt:
             msg = f"The environment variable {name} contains {value}, "
-            msg += f" which does not have the format `[package.]module:class`"
-            raise ValueError(
-                f"The environment variable {name} contains"
-            ) from no_colon
+            msg += f" which does not have the format `{FORMAT_SEL}`"
+            raise ValueError(msg) from wrong_fmt
 
         cls_obj = getattr(import_module(module), setting_cls)
 
-        kwargs = cls._build_kwargs(init_dot_py)
-
-        return cls_obj(**kwargs)
-
-    @staticmethod
-    def _build_kwargs(init_dot_py: str) -> Dict[str, Any]:
-        """Define default values using the `__init__.py` file."""
-        package_path = Path(init_dot_py).parent
-        base_path = package_path.parent
-        return {
-            "BASEPATH": base_path,
-            "PKG_PATH": package_path,
-            "DATA": Path(base_path).joinpath("data"),
-            "LOG_STORAGE": Path(base_path).joinpath("logs"),
-        }
+        return cls_obj(INIT_DOT_PY=init_dot_py)
 
     def to_str(self, dict_kw=None, **dumps_kw) -> str:
         """Formats the dictionary version as a string.
@@ -125,6 +142,6 @@ class _PetriSettings(BaseSettings):
     class Config:  # pylint: disable=missing-docstring,too-few-public-methods
         env_prefix = "PETRI_"
 
-    ENV = "production"
-    # LOG_LEVEL = LogLevel.ERROR
-    # LOG_MODE = LogMode.CONSOLE
+    LOG_LEVEL = LogLevel.WARNING
+    LOG_DEST = LogDest.CONSOLE
+    LOG_FMT = LogFormatter.COLOR
