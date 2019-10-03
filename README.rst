@@ -2,7 +2,40 @@
 PETRI
 =====
 
-Free your python code from 12-factor boilerplate.
+petri: free your python code from 12-factor boilerplate.
+--------------------------------------------------------
+
+.. list-table::
+   :widths: 50 50
+   :header-rows: 0
+
+   * - Release
+     - .. image:: https://img.shields.io/pypi/v/petri
+        :alt: PyPI
+   * - Travis
+     - .. image:: https://travis-ci.org/pwoolvett/petri.svg?branch=master
+   * - Docs
+     - .. image:: https://readthedocs.org/projects/petri/badge/?version=latest
+        :target: https://petri.readthedocs.io/en/latest/?badge=latest
+        :alt: Documentation Status
+   * - Docs
+     - .. image:: https://api.codeclimate.com/v1/badges/f0f976249fae332a0bab/maintainability
+         :target: https://codeclimate.com/github/pwoolvett/petri/maintainability
+         :alt: Maintainability
+   * - License
+     - .. image:: https://img.shields.io/pypi/l/petri
+        :alt: PyPI - License
+   * - Coverage
+     - 
+   * - Downloads
+     - .. image:: https://img.shields.io/pypi/dm/petri
+        :alt: PyPI - Downloads
+   * - Deps
+     - .. image:: https://img.shields.io/librariesio/github/pwoolvett/petri
+        :alt: Libraries.io dependency status for GitHub repo
+
+
+------------
 
 Summary
 -------
