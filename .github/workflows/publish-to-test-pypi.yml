@@ -46,17 +46,17 @@ jobs:
       - name: Build a binary wheel and a source tarball
         run: >-
           poetry build
-    - name: Publish distribution 📦 to Test PyPI
-      env: # Or as an environment variable
+    - name: Publish distribution  to Test PyPI
+      env:
         test_pypi_password: ${{ secrets.test_pypi_password }}
       run:
         poetry publish --repository https://test.pypi.org/legacy/ --username pwoolvett
-    - name: Publish distribution 📦 to PyPI
-      if: startsWith(github.event.ref, 'refs/tags')
-      with:
-        username: pwoolvett
-        password: ${{ secrets.pypi_password }}
-      run:
-        poetry publish \
-          --username ${{ username }} \
-          --password ${{ password }}
+    #  - name: Publish distribution to PyPI
+    #    if: startsWith(github.event.ref, 'refs/tags')
+    #    with:
+    #      username: pwoolvett
+    #      password: ${{ secrets.pypi_password }}
+    #    run:
+    #      poetry publish \
+    #        --username ${{ username }} \
+    #        --password ${{ password }}
