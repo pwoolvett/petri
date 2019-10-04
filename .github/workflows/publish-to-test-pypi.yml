@@ -18,6 +18,9 @@ jobs:
       - name: Install poetry
         run: >-
           python get-poetry.py --preview --version 1.0.0a5
+      - name: Install pkg in dev mode
+        run: >-
+          poetry install
       - name: format code
         run: >-
           autopep8 petri
