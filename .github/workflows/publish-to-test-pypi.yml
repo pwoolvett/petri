@@ -13,17 +13,17 @@ jobs:
         with:
           python-version: 3.6
       - name: Download poetry
-        run: >-
+        run: |
           curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py -o get-poetry.py
       - name: Install poetry
         run: >-
           python get-poetry.py --preview --version 1.0.0a5
       - name: Install pkg in dev mode
-        run: >-
+        run: |
           source $HOME/.poetry/env
           poetry install
       - name: format code
-        run: >-
+        run: |
           autopep8 petri
           isort -rc --atomic petri
           black --config tox.ini petri
