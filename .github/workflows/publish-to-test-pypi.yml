@@ -49,6 +49,7 @@ jobs:
           bandit --ini=tox.ini --quiet --recursive tests
       - name: test code
         run: |
+          source $HOME/.poetry/env
           poetry add tests/fixtures/a_pkg
           pytest tests/unit
       - name: Hello world
