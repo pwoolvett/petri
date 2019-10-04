@@ -1,4 +1,4 @@
-name: Publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+name: Publish Python distribution to PyPI and TestPyPI
 
 on: push
 
@@ -12,18 +12,18 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.6
+      - name: Download poetry
+        run: >-
+          curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py -o get-poetry.py
+      - name: Install poetry
+        run: >-
+          python get-poetry.py --preview --version 1.0.0a5
       - name: Hello world
         run: echo Hello world $FIRST_NAME $middle_name $Last_Name!
         env:
           FIRST_NAME: Mona
           middle_name: The
           Last_Name: Octocat
-    #   - name: Download poetry
-    #     run: >-
-    #       curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py -o get-poetry.py
-    #   - name: Install poetry
-    #     run: >-
-    #       python get-poetry.py --preview --version 1.0.0a5
     #   - name: format code
     #     run: >-
     #       autopep8 petri
