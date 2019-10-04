@@ -18,9 +18,11 @@ jobs:
       - name: Install poetry
         run: >-
           python get-poetry.py --preview --version 1.0.0a5
+          
       - name: Install pkg in dev mode
         run: |
           source $HOME/.poetry/env
+          mkdir -p $HOME/.config/pypoetry/
           echo -e '\
             [settings]
             [settings.virtualenvs]
