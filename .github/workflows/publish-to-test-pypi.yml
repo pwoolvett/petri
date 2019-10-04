@@ -12,57 +12,57 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.6
-      - name: Download poetry
-        run: >-
-          curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py -o get-poetry.py
-      - name: Install poetry
-        run: >-
-          python get-poetry.py --preview --version 1.0.0a5
-      - name: format code
-        run: >-
-          autopep8 petri
-          isort -rc --atomic petri
-          black --config tox.ini petri
-          docformatter --in-place --recursive --wrap-summaries 0 --blank petri
-
-          autopep8 tests
-          black --config tox.ini tests
-          isort -rc --atomic tests
-      - name: lint code
-        run: >-
-          flake8 --config=tox.ini petri
-          pylint --rcfile=tox.ini petri
-          mypy --config-file=tox.ini -p petri
-          bandit --ini=tox.ini --quiet --recursive petri
-
-          flake8 --config=tox.ini tests
-          pylint --rcfile=tox.ini --disable=C011,C0114,C0116,R0913,W0212,C0415,W0621,W0611 tests
-          mypy --config-file=tox.ini -p tests
-          bandit --ini=tox.ini --quiet --recursive -x tests
-      - name: test code
-        run: >-
-          poetry add tests/fixtures/a_pkg
-          pytest tests/unit
-      - name: Build a binary wheel and a source tarball
-        run: >-
-          poetry build
       - name: Hello world
         run: echo Hello world $FIRST_NAME $middle_name $Last_Name!
         env:
           FIRST_NAME: Mona
           middle_name: The
           Last_Name: Octocat
-    # - name: Publish distribution  to Test PyPI
-    #   env:
-    #     test_pypi_password: ${{ secrets.test_pypi_password }}
-    #   run:
-    #     poetry publish --repository https://test.pypi.org/legacy/ --username pwoolvett
-    #  - name: Publish distribution to PyPI
-    #    if: startsWith(github.event.ref, 'refs/tags')
-    #    with:
-    #      username: pwoolvett
-    #      password: ${{ secrets.pypi_password }}
-    #    run:
-    #      poetry publish \
-    #        --username ${{ username }} \
-    #        --password ${{ password }}
+    #   - name: Download poetry
+    #     run: >-
+    #       curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py -o get-poetry.py
+    #   - name: Install poetry
+    #     run: >-
+    #       python get-poetry.py --preview --version 1.0.0a5
+    #   - name: format code
+    #     run: >-
+    #       autopep8 petri
+    #       isort -rc --atomic petri
+    #       black --config tox.ini petri
+    #       docformatter --in-place --recursive --wrap-summaries 0 --blank petri
+
+    #       autopep8 tests
+    #       black --config tox.ini tests
+    #       isort -rc --atomic tests
+    #   - name: lint code
+    #     run: >-
+    #       flake8 --config=tox.ini petri
+    #       pylint --rcfile=tox.ini petri
+    #       mypy --config-file=tox.ini -p petri
+    #       bandit --ini=tox.ini --quiet --recursive petri
+
+    #       flake8 --config=tox.ini tests
+    #       pylint --rcfile=tox.ini --disable=C011,C0114,C0116,R0913,W0212,C0415,W0621,W0611 tests
+    #       mypy --config-file=tox.ini -p tests
+    #       bandit --ini=tox.ini --quiet --recursive -x tests
+    #   - name: test code
+    #     run: >-
+    #       poetry add tests/fixtures/a_pkg
+    #       pytest tests/unit
+    #   - name: Build a binary wheel and a source tarball
+    #     run: >-
+    #       poetry build
+    # # - name: Publish distribution  to Test PyPI
+    # #   env:
+    # #     test_pypi_password: ${{ secrets.test_pypi_password }}
+    # #   run:
+    # #     poetry publish --repository https://test.pypi.org/legacy/ --username pwoolvett
+    # #  - name: Publish distribution to PyPI
+    # #    if: startsWith(github.event.ref, 'refs/tags')
+    # #    with:
+    # #      username: pwoolvett
+    # #      password: ${{ secrets.pypi_password }}
+    # #    run:
+    # #      poetry publish \
+    # #        --username ${{ username }} \
+    # #        --password ${{ password }}
