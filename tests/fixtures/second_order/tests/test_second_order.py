@@ -13,6 +13,7 @@ def test_version():
     for k, v in expected.items():
         assert getattr(a_pkg.pkg.meta, k) == v
 
+
 def test_version():
     expected = {
         "name": "second-order",

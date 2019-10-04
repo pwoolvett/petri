@@ -11,14 +11,17 @@ petri: free your python code from 12-factor boilerplate.
 
    * - Release
      - .. image:: https://img.shields.io/pypi/v/petri
+        :target: https://pypi.org/project/petri/
         :alt: PyPI
-   * - Travis
-     - .. image:: https://travis-ci.org/pwoolvett/petri.svg?branch=master
+   * - Latest Build
+     - .. image:: https://github.com/pwoolvett/petri/workflows/publish_wf/badge.svg
+        :target: https://github.com/pwoolvett/petri/actions
+        :alt: Latest Build
    * - Docs
      - .. image:: https://readthedocs.org/projects/petri/badge/?version=latest
         :target: https://petri.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
-   * - Docs
+   * - Maintainability
      - .. image:: https://api.codeclimate.com/v1/badges/f0f976249fae332a0bab/maintainability
          :target: https://codeclimate.com/github/pwoolvett/petri/maintainability
          :alt: Maintainability
