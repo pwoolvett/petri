@@ -23,7 +23,7 @@ jobs:
         run: |
           source $HOME/.poetry/env
           mkdir -p $HOME/.config/pypoetry/
-          echo -e '[settings]\n[settings.virtualenvs]\ncreate = false\n\n[repositories]\n[repositories.test]\nurl = "https://test.pypi.org/legacy/"' > $HOME/.config/pypoetry/config.toml
+          echo -e '[settings]\n[settings.virtualenvs]\ncreate = false\n\n[repositories]\n[repositories.testpypi]\nurl = "https://test.pypi.org/legacy/"' > $HOME/.config/pypoetry/config.toml
           poetry config settings.virtualenvs.create false
           poetry install
       - name: format code
@@ -66,9 +66,10 @@ jobs:
       - name: Publish to test PyPI
         run: |
           source $HOME/.poetry/env
-          poetry publish --repository https://test.pypi.org/legacy/ --username pwoolvett --password $password
+          poetry publish --repository $repo --username pwoolvett --password $password
         env:
           password: ${{ secrets.test_pypi_password }}
+          repo: testpypi
     # # - name: Publish distribution  to Test PyPI
     # #   env:
     # #     test_pypi_password: ${{ secrets.test_pypi_password }}
