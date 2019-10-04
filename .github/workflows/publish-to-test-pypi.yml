@@ -36,27 +36,27 @@ jobs:
           autopep8 tests
           black --config tox.ini tests
           isort -rc --atomic tests
+      - name: lint code
+        run: >-
+          flake8 --config=tox.ini petri
+          pylint --rcfile=tox.ini petri
+          mypy --config-file=tox.ini -p petri
+          bandit --ini=tox.ini --quiet --recursive petri
+
+          flake8 --config=tox.ini tests
+          pylint --rcfile=tox.ini --disable=C011,C0114,C0116,R0913,W0212,C0415,W0621,W0611 tests
+          mypy --config-file=tox.ini -p tests
+          bandit --ini=tox.ini --quiet --recursive -x tests
+      - name: test code
+        run: >-
+          poetry add tests/fixtures/a_pkg
+          pytest tests/unit
       - name: Hello world
         run: echo Hello world $FIRST_NAME $middle_name $Last_Name!
         env:
           FIRST_NAME: Mona
           middle_name: The
           Last_Name: Octocat
-    #   - name: lint code
-    #     run: >-
-    #       flake8 --config=tox.ini petri
-    #       pylint --rcfile=tox.ini petri
-    #       mypy --config-file=tox.ini -p petri
-    #       bandit --ini=tox.ini --quiet --recursive petri
-
-    #       flake8 --config=tox.ini tests
-    #       pylint --rcfile=tox.ini --disable=C011,C0114,C0116,R0913,W0212,C0415,W0621,W0611 tests
-    #       mypy --config-file=tox.ini -p tests
-    #       bandit --ini=tox.ini --quiet --recursive -x tests
-    #   - name: test code
-    #     run: >-
-    #       poetry add tests/fixtures/a_pkg
-    #       pytest tests/unit
     #   - name: Build a binary wheel and a source tarball
     #     run: >-
     #       poetry build
