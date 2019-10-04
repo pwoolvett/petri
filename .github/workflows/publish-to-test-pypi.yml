@@ -21,8 +21,15 @@ jobs:
       - name: Install pkg in dev mode
         run: |
           source $HOME/.poetry/env
-          mkdir -p /runner/.config/pypoetry/
-          touch /runner/.config/pypoetry/config.toml
+          echo -e '\
+            [settings]
+            [settings.virtualenvs]
+            create = false
+
+            [repositories]
+            [repositories.notpypi]
+            url = "http://notpypi:8080/"
+          ' > $HOME/.config/pypoetry/config.toml
           poetry config settings.virtualenvs.create false
           poetry install
       - name: format code
