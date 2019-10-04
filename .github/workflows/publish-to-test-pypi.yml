@@ -64,7 +64,9 @@ jobs:
           source $HOME/.poetry/env
           poetry build
       - name: Publish to test PyPI
-        run: poetry publish --repository https://test.pypi.org/legacy/ --username pwoolvett --password $password
+        run: |
+          source $HOME/.poetry/env
+          poetry publish --repository https://test.pypi.org/legacy/ --username pwoolvett --password $password
         env:
           password: ${{ secrets.test_pypi_password }}
     # # - name: Publish distribution  to Test PyPI
