@@ -46,6 +46,12 @@ jobs:
       - name: Build a binary wheel and a source tarball
         run: >-
           poetry build
+      - name: Hello world
+        run: echo Hello world $FIRST_NAME $middle_name $Last_Name!
+        env:
+          FIRST_NAME: Mona
+          middle_name: The
+          Last_Name: Octocat
     - name: Publish distribution  to Test PyPI
       env:
         test_pypi_password: ${{ secrets.test_pypi_password }}
