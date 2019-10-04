@@ -37,7 +37,7 @@ jobs:
           black --config tox.ini tests
           isort -rc --atomic tests
       - name: lint code
-        run: >-
+        run: |
           flake8 --config=tox.ini petri
           pylint --rcfile=tox.ini petri
           mypy --config-file=tox.ini -p petri
@@ -48,7 +48,7 @@ jobs:
           mypy --config-file=tox.ini -p tests
           bandit --ini=tox.ini --quiet --recursive -x tests
       - name: test code
-        run: >-
+        run: |
           poetry add tests/fixtures/a_pkg
           pytest tests/unit
       - name: Hello world
