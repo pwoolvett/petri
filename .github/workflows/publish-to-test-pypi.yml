@@ -52,6 +52,7 @@ jobs:
           source $HOME/.poetry/env
           poetry add tests/fixtures/a_pkg
           pytest tests/unit
+          poetry remove a-pkg
       - name: Hello world
         run: echo Hello world $FIRST_NAME $middle_name $Last_Name!
         env:
