@@ -23,7 +23,7 @@ jobs:
         run: |
           source $HOME/.poetry/env
           mkdir -p $HOME/.config/pypoetry/
-          echo -e '[settings]\n[settings.virtualenvs]\ncreate = false\n\n[repositories]\n[repositories.notpypi]\nurl = "http://notpypi:8080/"' > $HOME/.config/pypoetry/config.toml
+          echo -e '[settings]\n[settings.virtualenvs]\ncreate = false\n\n[repositories]\n[repositories.test]\nurl = "https://test.pypi.org/legacy/"' > $HOME/.config/pypoetry/config.toml
           poetry config settings.virtualenvs.create false
           poetry install
       - name: format code
@@ -46,7 +46,7 @@ jobs:
           flake8 --config=tox.ini tests
           pylint --rcfile=tox.ini --disable=C011,C0114,C0116,R0913,W0212,C0415,W0621,W0611 tests
           mypy --config-file=tox.ini -p tests
-          bandit --ini=tox.ini --quiet --recursive -x tests
+          bandit --ini=tox.ini --quiet --recursive tests
       - name: test code
         run: |
           poetry add tests/fixtures/a_pkg
