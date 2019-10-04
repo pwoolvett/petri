@@ -23,15 +23,7 @@ jobs:
         run: |
           source $HOME/.poetry/env
           mkdir -p $HOME/.config/pypoetry/
-          echo -e '\
-            [settings]
-            [settings.virtualenvs]
-            create = false
-
-            [repositories]
-            [repositories.notpypi]
-            url = "http://notpypi:8080/"
-          ' > $HOME/.config/pypoetry/config.toml
+          echo -e '[settings]\n[settings.virtualenvs]\ncreate = false\n\n[repositories]\n[repositories.notpypi]\nurl = "http://notpypi:8080/"' > $HOME/.config/pypoetry/config.toml
           poetry config settings.virtualenvs.create false
           poetry install
       - name: format code
