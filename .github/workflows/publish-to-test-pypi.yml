@@ -18,22 +18,22 @@ jobs:
       - name: Install poetry
         run: >-
           python get-poetry.py --preview --version 1.0.0a5
+      - name: format code
+        run: >-
+          autopep8 petri
+          isort -rc --atomic petri
+          black --config tox.ini petri
+          docformatter --in-place --recursive --wrap-summaries 0 --blank petri
+
+          autopep8 tests
+          black --config tox.ini tests
+          isort -rc --atomic tests
       - name: Hello world
         run: echo Hello world $FIRST_NAME $middle_name $Last_Name!
         env:
           FIRST_NAME: Mona
           middle_name: The
           Last_Name: Octocat
-    #   - name: format code
-    #     run: >-
-    #       autopep8 petri
-    #       isort -rc --atomic petri
-    #       black --config tox.ini petri
-    #       docformatter --in-place --recursive --wrap-summaries 0 --blank petri
-
-    #       autopep8 tests
-    #       black --config tox.ini tests
-    #       isort -rc --atomic tests
     #   - name: lint code
     #     run: >-
     #       flake8 --config=tox.ini petri
