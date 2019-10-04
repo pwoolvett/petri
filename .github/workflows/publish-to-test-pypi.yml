@@ -52,11 +52,11 @@ jobs:
           FIRST_NAME: Mona
           middle_name: The
           Last_Name: Octocat
-    - name: Publish distribution  to Test PyPI
-      env:
-        test_pypi_password: ${{ secrets.test_pypi_password }}
-      run:
-        poetry publish --repository https://test.pypi.org/legacy/ --username pwoolvett
+    # - name: Publish distribution  to Test PyPI
+    #   env:
+    #     test_pypi_password: ${{ secrets.test_pypi_password }}
+    #   run:
+    #     poetry publish --repository https://test.pypi.org/legacy/ --username pwoolvett
     #  - name: Publish distribution to PyPI
     #    if: startsWith(github.event.ref, 'refs/tags')
     #    with:
