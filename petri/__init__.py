@@ -1,69 +1,56 @@
-# coding=utf-8
-"""Handle project/application config from pyproject.toml.
+# -*- coding: utf-8 -*-
+"""Petri: 12-factor boilerplate in your python code."""
 
-Features include::
-
-    * lazy-loading of project metadata from pyproject.toml
-    * pre-loading a dotenv file
-    * equipping a package/app/script/module with a pre-configured logger
-
-
-.. versionadded:: 0.1.0
-   Initial version.
-
-"""
-import os
+from importlib import import_module
 from pathlib import Path
+from typing import Optional
 
-from .metadata import Metadata
-from .dotenv_ import init_dotenv
-from .logging_ import create_logger, LogLevel, LogMode, make_tqdm
-from .base_settings import BaseSettings
+from petri.dot_env import init_dotenv
+from petri.loggin import configure_logging
+from petri.metadata import Metadata
+from petri.settings import BaseSettings
+
+__version__ = "0.23.0"
 
 
-# pylint: disable=missing-docstring
+class Petri:  # pylint: disable=R0903
+    """Init & instantiate other modules & classes."""
 
+    @staticmethod
+    def pkg_2_envvar(name: str) -> str:
+        """Transform package name into config selector string.
 
-def _initialize(**kwargs):
-    """Instantiates all objects using a single python file."""
+        Example:
 
-    main_file = kwargs["main_file"]
-    pyproject_file = kwargs.get("pyproject_file")
-    app_name = kwargs.get("app_name")
+            >>> pkg_2_envvar('a-pkg')
+            'A_PKG_CONFIG'
 
-    metadata_ = Metadata(main_file, pyproject_file=pyproject_file)
+        """
+        return name.replace("-", "_").upper() + "_CONFIG"
 
-    dle_path = Path(
-        os.environ.get(
-            "DOTENV_LOCATION", Path(os.getcwd()).resolve().joinpath(".env")
+    def __init__(
+        self, init_dot_py: str, *, default_config: Optional[str] = None
+    ):
+        self.__init_dot_py = init_dot_py
+        self.__package = str(Path(init_dot_py).parent.stem)
+        self.__default_config = default_config
+
+        self.env_file: Optional[str] = init_dotenv()
+        self.meta = Metadata(self.__package)
+        self.settings = BaseSettings.from_envvar(
+            self.pkg_2_envvar(self.__package),
+            init_dot_py=self.__init_dot_py,
+            default_config=self.__default_config,
         )
-    )
+        self.log = configure_logging(
+            self.__package,
+            self.settings.LOG_LEVEL,
+            self.settings.LOG_DEST,
+            self.settings.LOG_FMT,
+            self.settings.LOG_STORAGE,
+        )
 
-    dotenv_location_ = init_dotenv(path=dle_path, main_file=main_file)
-
-    app_name = app_name or metadata_.package_name
-    settings_ = BaseSettings.from_env(main_file, app_name)
-    logger_ = create_logger(
-        settings_.LOG_LEVEL, settings_.LOG_MODE, settings_.LOG_STORAGE
-    )
-
-    tqdm_ = make_tqdm(settings_.ENV)
-
-    return metadata_, dotenv_location_, settings_, logger_, tqdm_
+        self.log.info(str(self.__dict__))
 
 
-def initialize(main_file_str: str, app_name: str = "", **kw):
-
-    main_file = Path(main_file_str)
-    stem = main_file.stem
-
-    init_kw = {"main_file": main_file, "app_name": app_name, **kw}
-
-    if stem != "__init__":
-        init_kw["pyproject_file"] = main_file.parent.joinpath("pyproject.toml")
-
-    return _initialize(**init_kw)
-
-
-# pylint: disable=invalid-name
-__meta__, DOTENV_LOCATION, SETTINGS, logger, _ = initialize(__file__, "petri")
+pkg = Petri(__file__, default_config="petri.settings:_PetriSettings")

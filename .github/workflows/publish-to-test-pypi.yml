@@ -1,0 +1,94 @@
+name: publish_wf
+
+on: push
+
+jobs:
+  build-n-publish:
+    name: Build and publish Python distributions to PyPI and TestPyPI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Set up Python 3.6
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.6
+      - name: Download poetry
+        run: |
+          curl -sSL https://raw.githubusercontent.com/sdispater/poetry/master/get-poetry.py -o get-poetry.py
+      - name: Install poetry
+        run: >-
+          python get-poetry.py --preview --version 1.0.0a5
+          
+      - name: Install pkg in dev mode
+        run: |
+          source $HOME/.poetry/env
+          mkdir -p $HOME/.config/pypoetry/
+          poetry config repositories.testpypi https://test.pypi.org/simple
+          poetry config settings.virtualenvs.create false
+          poetry install
+      - name: format code
+        run: |
+          autopep8 petri
+          isort -rc --atomic petri
+          black --config tox.ini petri
+          docformatter --in-place --recursive --wrap-summaries 0 --blank petri
+
+          autopep8 tests
+          black --config tox.ini tests
+          isort -rc --atomic tests
+      - name: lint code
+        run: |
+          flake8 --config=tox.ini petri
+          pylint --rcfile=tox.ini petri
+          mypy --config-file=tox.ini -p petri
+          bandit --ini=tox.ini --quiet --recursive petri
+
+          flake8 --config=tox.ini tests
+          pylint --rcfile=tox.ini --disable=C011,C0114,C0116,R0913,W0212,C0415,W0621,W0611 tests
+          mypy --config-file=tox.ini -p tests
+          bandit --ini=tox.ini --quiet --recursive tests
+      - name: test code
+        run: |
+          source $HOME/.poetry/env
+          poetry add tests/fixtures/a_pkg
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          ./cc-test-reporter before-build
+          pytest tests/unit
+          coverage xml
+          ./cc-test-reporter after-build
+          poetry remove a-pkg
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.code_climate_id }}
+      - name: Build a binary wheel and a source tarball
+        run: |
+          source $HOME/.poetry/env
+          poetry build
+      - name: Publish to test PyPI
+        run: |
+          source $HOME/.poetry/env
+          poetry publish --repository testpypi --username __token__ --password $password
+        env:
+          password: ${{ secrets.test_pypi_gh_action_push_pkg }}
+          repo: testpypi
+      - name: Publish to PyPI
+        if: contains( github.ref, 'tag' )
+        run: |
+          source $HOME/.poetry/env
+          poetry publish --username __token__ --password $password
+        env:
+          password: ${{ secrets.pypi_github }}
+    # # - name: Publish distribution  to Test PyPI
+    # #   env:
+    # #     test_pypi_password: ${{ secrets.test_pypi_password }}
+    # #   run:
+    # #     poetry publish --repository https://test.pypi.org/legacy/ --username pwoolvett
+    # #  - name: Publish distribution to PyPI
+    # #    if: startsWith(github.event.ref, 'refs/tags')
+    # #    with:
+    # #      username: pwoolvett
+    # #      password: ${{ secrets.pypi_password }}
+    # #    run:
+    # #      poetry publish \
+    # #        --username ${{ username }} \
+    # #        --password ${{ password }}

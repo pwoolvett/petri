@@ -1,70 +1,74 @@
-[tool.meta]
-release = "pre-alpha"
-maintainer = "Pablo Woolvett <pablowoolvett@gmail.com>"
-copyright = ""
-url = "https://www.github.com/pwoolvett/petri"
-license = "MIT"
-
 [tool.poetry]
 name = "petri"
-version = "0.22.2"
-description = "Handle project/application config from pyproject.toml"
+version = "0.23.0"
+description = "Free your python code from 12-factor boilerplate."
+license = "Unlicense"
 authors = [
-  "Pablo Woolvett <pablowoolvett@gmail.com>"
+    "Pablo Woolvett <pablowoolvett@gmail.com>",
 ]
 readme = "README.rst"
-include = ["pyproject.toml"]
-
-[tool.poetry.scripts]
-petri = 'petri.__main__:_main'
+homepage = "https://pypi.org/project/petri/"
+repository = "https://github.com/pwoolvett/petri"
+documentation = "https://petri.readthedocs.io/en/stable/"
+keywords = [
+    "pyproject.toml",
+    "dotenv",
+    "boilerplate",
+    "12-factor",
+    "pydantic",
+    "log",
+]
 
 [tool.poetry.dependencies]
 python = "^3.6"
-
-python-dotenv= "^0.10"
-logzero= "^1.5"
-toml= "^0.10"
-autologging = "^1.3"
-tzlocal = "^1.5"
+python-dotenv = "^0.10.3"
 pydantic = "^0.32.2"
+structlog = "^19.1.0"
+importlib_metadata = "^0.23"
 
-tqdm = {version = "^4.36.1", optional = true}
-
-[tool.poetry.extras]
-tqdm = ["tqdm"]
+colorama = {version = "^0.4.1", optional = true}
 
 [tool.poetry.dev-dependencies]
-black = { version = "*", allows-prereleases = true }
-autopep8 = "^1.4"
-pylint = "^2.3"
-flake8 = "^3.7"
-flake8-bugbear = "^19.3"
-mypy = "^0.701"
-mypy-extensions = "^0.4"
-coverage = "^4.5"
-pytest-cov = "^2.6"
-hypothesis = "^4.17"
-behave = "^1.2"
+pip = "^19.2.3"
+
+# format
+blackini = "^0.1.6"
+isort = "^4.3.21"
+autopep8 = "^1.4.4"
+docformatter = "^1.3"
+
+# lint
+flake8 = "^3.7.8"
+flake8-bugbear = "^19.8.0"
+mypy = "^0.720"
+bandit = "^1.6.2"
+pylint = "^2.4.1"
+
+# test
+pytest = "^5.1.2"
+pytest-html = "^2.0.0"
+pytest-cov = "^2.7.1"
+
+# doc
+doc8 = "^0.8.0"
+docutils = "^0.15.2"
 Sphinx = "^1.8"
-doc8 = "^0.8"
 sphinx_rtd_theme = "^0.4.2"
 sphinx-autodoc-typehints = "^1.5"
 sphinx-autobuild = "^0.7.1"
-pytest = "^4.0"
-pep8 = "^1.7"
-bandit = "^1.6"
-docformatter = "^1.1"
 sphinxcontrib-apidoc = "^0.3.0"
 
-[tool.black]
-line-length = 79
-target-version = ['py36']
-quiet = true
+
+[tool.poetry.extras]
+color = [ "colorama", ]
+docs = [ "doc8", "docutils", ]
+pytest = [ "pytest", "pytest-html", "pytest-cov" ]
+lint = [ "flake8", "flake8-bugbear", "mypy", "bandit", "pylint", ]
 
 [tool.dephell.main]
 from = {format = "poetry", path = "pyproject.toml"}
 to = {format = "setuppy", path = "setup.py"}
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = [ "poetry>=0.12",]
 build-backend = "poetry.masonry.api"
