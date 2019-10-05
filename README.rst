@@ -30,14 +30,16 @@ petri: free your python code from 12-factor boilerplate.
         :target: https://petri.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
    * - Maintainability
-     - .. image:: https://api.codeclimate.com/v1/badges/f0f976249fae332a0bab/maintainability
-         :target: https://codeclimate.com/github/pwoolvett/petri/maintainability
-         :alt: Maintainability
+     - .. image:: https://api.codeclimate.com/v1/badges/4a883c99f3705d3390ee/maintainability
+        :target: https://codeclimate.com/github/pwoolvett/petri/maintainability
+        :alt: Maintainability
    * - License
      - .. image:: https://img.shields.io/pypi/l/petri
         :alt: PyPI - License
    * - Coverage
-     - 
+     - .. image:: https://api.codeclimate.com/v1/badges/4a883c99f3705d3390ee/test_coverage
+        :target: https://codeclimate.com/github/pwoolvett/petri/test_coverage
+        :alt: Test Coverage
    * - Downloads
      - .. image:: https://img.shields.io/pypi/dm/petri
         :alt: PyPI - Downloads
