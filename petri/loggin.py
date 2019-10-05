@@ -84,6 +84,7 @@ def configure_logging(
 
     Returns:
         The configured logger.
+
     """
 
     if formatter == LogFormatter.JSON:

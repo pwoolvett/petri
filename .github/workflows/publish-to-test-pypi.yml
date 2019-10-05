@@ -60,6 +60,7 @@ jobs:
           poetry remove a-pkg
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.code_climate_id }}
+          GIT_BRANCH: master
       - name: Build a binary wheel and a source tarball
         run: |
           source $HOME/.poetry/env

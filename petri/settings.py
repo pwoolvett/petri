@@ -91,6 +91,7 @@ class BaseSettings(PydanticBaseSettings, ABC):
 
         Returns:
             The instantiated class.
+
         """
 
         try:
