@@ -55,6 +55,7 @@ jobs:
           chmod +x ./cc-test-reporter
           ./cc-test-reporter before-build
           pytest tests/unit
+          coverage xml
           ./cc-test-reporter after-build
           poetry remove a-pkg
         env:
