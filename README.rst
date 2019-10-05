@@ -83,11 +83,31 @@ Usage
 
 - Define dev/prod/test settings:
 
-  :download:`settings.py <tests/fixtures/a_pkg/a_pkg/settings.py>`.
+  .. code:: python
 
-  IMPORTANT: Make sure to set
+      from petri.settings import BaseSettings
+
+
+      class Settings(BaseSettings):
+          class Config:  # pylint: disable=missing-docstring,too-few-public-methods
+              env_prefix = "A_PKG_"
+
+
+      class Production(Settings):
+          ENV = "production"
+
+
+      class Development(Settings):
+          ENV = "development"
+
+
+      class Testing(Settings):
+          ENV = "testing"
+
+
+  IMPORTANT: In your base class, define ``Config.env_prefix``. For example, a package
+  named `a-pkg` turns into `A_PKG_`. The code used should be compatible with:
   `Config.env_prefix=[package_name].upper().replace('-' ,'_')+'_'`.
-  In this example, a package named `a-pkg` turns into `A_PKG_`
 
 - Select which class of setting to use, by doing one of the folowing:
 
@@ -101,7 +121,16 @@ Usage
 
 - Instantiate `petri.Petri` form your package's `__init__.py`, like so:
 
-   :download:`__init__.py <tests/fixtures/a_pkg/a_pkg/__init__.py>`.
+   .. code:: python
+
+      """A package: sample petri usage"""
+
+      from petri import Petri
+
+      pkg = Petri(__file__)
+
+      __version__ = "1.2.3"
+
 
 This allows petri to:
 
