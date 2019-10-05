@@ -23,7 +23,7 @@ jobs:
         run: |
           source $HOME/.poetry/env
           mkdir -p $HOME/.config/pypoetry/
-          echo -e '[settings]\n[settings.virtualenvs]\ncreate = false\n\n[repositories]\n[repositories.testpypi]\nurl = "https://test.pypi.org/legacy/"' > $HOME/.config/pypoetry/config.toml
+          echo -e '[settings]\n[settings.virtualenvs]\ncreate = false\n\n[repositories]\n[repositories.testpypi]\nurl = "https://upload.pypi.org/legacy/"' > $HOME/.config/pypoetry/config.toml
           poetry config settings.virtualenvs.create false
           poetry install
       - name: format code
