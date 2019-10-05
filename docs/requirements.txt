@@ -1,0 +1,6 @@
+petri
+sphinxcontrib.apidoc
+sphinx_autodoc_typehints
+sphinx_rtd_theme
+sphinx-autodoc-typehints
+sphinx-autobuild
