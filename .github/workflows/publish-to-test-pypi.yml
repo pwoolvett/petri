@@ -51,8 +51,14 @@ jobs:
         run: |
           source $HOME/.poetry/env
           poetry add tests/fixtures/a_pkg
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+          ./cc-test-reporter before-build
           pytest tests/unit
+          ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
           poetry remove a-pkg
+        env:
+          CC_TEST_REPORTER_ID: 8d03df110674bfedfc4cf199f427d0159306a6441becd2e5c77277ffd10b0fbf
       - name: Build a binary wheel and a source tarball
         run: |
           source $HOME/.poetry/env
@@ -64,6 +70,13 @@ jobs:
         env:
           password: ${{ secrets.test_pypi_gh_action_push_pkg }}
           repo: testpypi
+      - name: Publish to PyPI
+        if: contains( github.ref, 'tag' )
+        run: |
+          source $HOME/.poetry/env
+          poetry publish --username __token__ --password $password
+        env:
+          password: ${{ secrets.pypi_github }}
     # # - name: Publish distribution  to Test PyPI
     # #   env:
     # #     test_pypi_password: ${{ secrets.test_pypi_password }}

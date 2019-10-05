@@ -9,14 +9,22 @@ petri: free your python code from 12-factor boilerplate.
    :widths: 50 50
    :header-rows: 0
 
+   * - Python Version
+     - .. image:: https://img.shields.io/pypi/pyversions/petri
+        :target: https://www.python.org/downloads/
+        :alt: Python Version
+   * - Code Style
+     - .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+        :target: https://github.com/ambv/black
+        :alt: Code Style
    * - Release
      - .. image:: https://img.shields.io/pypi/v/petri
         :target: https://pypi.org/project/petri/
         :alt: PyPI
-   * - Latest Build
+   * - Build Status
      - .. image:: https://github.com/pwoolvett/petri/workflows/publish_wf/badge.svg
         :target: https://github.com/pwoolvett/petri/actions
-        :alt: Latest Build
+        :alt: Build Status
    * - Docs
      - .. image:: https://readthedocs.org/projects/petri/badge/?version=latest
         :target: https://petri.readthedocs.io/en/latest/?badge=latest
