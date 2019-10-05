@@ -68,7 +68,7 @@ jobs:
           source $HOME/.poetry/env
           poetry publish --repository $repo --username __token__ --password $password
         env:
-          password: ${{ secrets.gh_action_push_pkg }}
+          password: ${{ secrets.test_pypi_gh_action_push_pkg }}
           repo: testpypi
     # # - name: Publish distribution  to Test PyPI
     # #   env:
