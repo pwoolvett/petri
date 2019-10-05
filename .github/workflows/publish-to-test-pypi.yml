@@ -7,7 +7,7 @@ jobs:
     name: Build and publish Python distributions to PyPI and TestPyPI
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@refactor
+      - uses: actions/checkout@master
       - name: Set up Python 3.6
         uses: actions/setup-python@v1
         with:
@@ -57,7 +57,7 @@ jobs:
         run: |
           source $HOME/.poetry/env
           poetry build
-      - name: Publish to testPyPI
+      - name: Publish to test PyPI
         run: |
           source $HOME/.poetry/env
           poetry publish --repository testpypi --username __token__ --password $password
