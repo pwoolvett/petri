@@ -55,7 +55,7 @@ jobs:
           chmod +x ./cc-test-reporter
           ./cc-test-reporter before-build
           pytest tests/unit
-          ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+          ./cc-test-reporter after-build
           poetry remove a-pkg
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.code_climate_id }}
