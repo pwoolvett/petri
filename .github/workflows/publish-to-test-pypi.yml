@@ -23,7 +23,7 @@ jobs:
         run: |
           source $HOME/.poetry/env
           mkdir -p $HOME/.config/pypoetry/
-          echo -e '[settings]\n[settings.virtualenvs]\ncreate = false\n\n[repositories]\n[repositories.testpypi]\nurl = "https://upload.pypi.org/legacy/"' > $HOME/.config/pypoetry/config.toml
+          poetry config repositories.testpypi https://test.pypi.org/simple
           poetry config settings.virtualenvs.create false
           poetry install
       - name: format code
@@ -53,12 +53,6 @@ jobs:
           poetry add tests/fixtures/a_pkg
           pytest tests/unit
           poetry remove a-pkg
-      - name: Hello world
-        run: echo Hello world $FIRST_NAME $middle_name $Last_Name!
-        env:
-          FIRST_NAME: Mona
-          middle_name: The
-          Last_Name: Octocat
       - name: Build a binary wheel and a source tarball
         run: |
           source $HOME/.poetry/env
@@ -66,7 +60,7 @@ jobs:
       - name: Publish to test PyPI
         run: |
           source $HOME/.poetry/env
-          poetry publish --repository $repo --username __token__ --password $password
+          poetry publish --repository testpypi --username __token__ --password $password
         env:
           password: ${{ secrets.test_pypi_gh_action_push_pkg }}
           repo: testpypi
