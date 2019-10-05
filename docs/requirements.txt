@@ -1,6 +1,4 @@
 petri
-sphinxcontrib.apidoc
-sphinx_autodoc_typehints
-sphinx_rtd_theme
+sphinxcontrib-apidoc
 sphinx-autodoc-typehints
-sphinx-autobuild
+sphinx_rtd_theme
