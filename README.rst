@@ -21,6 +21,9 @@ petri: free your python code from 12-factor boilerplate.
      - .. image:: https://img.shields.io/pypi/v/petri
         :target: https://pypi.org/project/petri/
         :alt: PyPI
+   * - Downloads
+     - .. image:: https://img.shields.io/pypi/dm/petri
+        :alt: PyPI - Downloads
    * - Build Status
      - .. image:: https://github.com/pwoolvett/petri/workflows/publish_wf/badge.svg
         :target: https://github.com/pwoolvett/petri/actions
@@ -34,15 +37,13 @@ petri: free your python code from 12-factor boilerplate.
         :target: https://codeclimate.com/github/pwoolvett/petri/maintainability
         :alt: Maintainability
    * - License
-     - .. image:: https://img.shields.io/pypi/l/petri
-        :alt: PyPI - License
+     - .. image:: https://img.shields.io/badge/license-Unlicense-blue.svg
+        :target: http://unlicense.org/
+        :alt: License: Unlicense
    * - Coverage
      - .. image:: https://api.codeclimate.com/v1/badges/4a883c99f3705d3390ee/test_coverage
         :target: https://codeclimate.com/github/pwoolvett/petri/test_coverage
         :alt: Test Coverage
-   * - Downloads
-     - .. image:: https://img.shields.io/pypi/dm/petri
-        :alt: PyPI - Downloads
    * - Deps
      - .. image:: https://img.shields.io/librariesio/github/pwoolvett/petri
         :alt: Libraries.io dependency status for GitHub repo
@@ -82,7 +83,7 @@ Usage
 
 - Define dev/prod/test settings:
 
-   .. include:: examples/a_pkg/a_pkg/settings.py
+  :download:`settings.py <tests/fixtures/a_pkg/a_pkg/settings.py>`.
 
   IMPORTANT: Make sure to set
   `Config.env_prefix=[package_name].upper().replace('-' ,'_')+'_'`.
@@ -100,7 +101,7 @@ Usage
 
 - Instantiate `petri.Petri` form your package's `__init__.py`, like so:
 
-   .. include:: examples/a_pkg/a_pkg/__init__.py
+   :download:`__init__.py <tests/fixtures/a_pkg/a_pkg/__init__.py>`.
 
 This allows petri to:
 
