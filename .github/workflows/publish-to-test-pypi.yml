@@ -58,7 +58,7 @@ jobs:
           ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
           poetry remove a-pkg
         env:
-          CC_TEST_REPORTER_ID: 8d03df110674bfedfc4cf199f427d0159306a6441becd2e5c77277ffd10b0fbf
+          CC_TEST_REPORTER_ID: ${{ secrets.code_climate_id }}
       - name: Build a binary wheel and a source tarball
         run: |
           source $HOME/.poetry/env
