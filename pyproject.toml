@@ -28,6 +28,7 @@ importlib_metadata = "^0.23"
 
 colorama = {version = "^0.4.1", optional = true}
 
+
 [tool.poetry.dev-dependencies]
 pip = "^19.2.3"
 
@@ -55,13 +56,11 @@ docutils = "^0.15.2"
 Sphinx = "^1.8"
 sphinx_rtd_theme = "^0.4.2"
 sphinx-autodoc-typehints = "^1.5"
-sphinx-autobuild = "^0.7.1"
 sphinxcontrib-apidoc = "^0.3.0"
-
 
 [tool.poetry.extras]
 color = [ "colorama", ]
-docs = [ "doc8", "docutils", ]
+docs = [ "doc8", "docutils","Sphinx","sphinx_rtd_theme","sphinx-autodoc-typehints","sphinxcontrib-apidoc",]
 pytest = [ "pytest", "pytest-html", "pytest-cov" ]
 lint = [ "flake8", "flake8-bugbear", "mypy", "bandit", "pylint", ]
 

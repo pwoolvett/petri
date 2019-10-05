@@ -81,12 +81,16 @@ class BaseSettings(PydanticBaseSettings, ABC):
         """Instantiate settings class.
 
         Args:
-            name: Name of the environment variable which contains
-            the name of the settings class. Its contents must be of the
-            form ``package.module:class``.
+            name: Name of the environment variable which contains the
+                name of the settings class. Its contents must be of the
+                form ``package.module:class``.
+
+        Raises:
+            KeyError: The received envvar cant be found
+            ValueError: A wrong format was used for the envvar
 
         Returns:
-
+            The instantiated class.
         """
 
         try:

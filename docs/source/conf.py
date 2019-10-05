@@ -2,13 +2,16 @@
 # -- Path setup --------------------------------------------------------------
 # not required if `petri` is installed
 # -- Project information -----------------------------------------------------
-from petri import __meta__
+from petri import pkg
+
+__meta__ = pkg.meta
 
 project = __meta__.name
-copyright = __meta__.copyright
-author = __meta__.authors
+copyright = 'None'
+author = f"{__meta__.author} <{getattr(__meta__,'author-email')}>"
 version = __meta__.version
-release = __meta__.release
+release = '.'.join(__meta__.version.split('.')[3:])
+
 # -- General configuration ---------------------------------------------------
 # If your documentation needs a minimal Sphinx version, state it here.
 #
@@ -137,7 +140,7 @@ html_theme_options = {
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ["static"]
+# html_static_path = ["static"]
 # Custom sidebar templates, must be a dictionary that maps document names
 # to template names.
 #

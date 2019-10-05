@@ -77,17 +77,13 @@ def configure_logging(
     Args:
         name: Name for the logger.
         level: Level from where to start logging.
-        dest: Whether to log to file or console
-        formatter: Whether to output data as json or colored, parsed logs.
-        log_file: Where to store logfiles. Only used if `dest`='FILE'.
-
-    Raises:
-        NotADirectoryError: [description]
-        NotADirectoryError: [description]
+        dest: Whether to log to file or console.
+        formatter: Whether to output data as json or colored, parsed
+            logs.
+        log_file: Where to store logfiles. Only used if ``dest='FILE'``.
 
     Returns:
         The configured logger.
-
     """
 
     if formatter == LogFormatter.JSON:
