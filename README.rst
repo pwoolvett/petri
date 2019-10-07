@@ -77,10 +77,6 @@ Optionally, also install the ``color`` extra for colored logs using `colorama <h
 Usage
 -----
 
-.. raw:: html
-
-   <script id="asciicast-3vc6LraDAy2v7KQvEoKGRv4sF" src="https://asciinema.org/a/3vc6LraDAy2v7KQvEoKGRv4sF.js" async></script>
-
 * Define configuration setting(s) and instantiate ``petri.Petri``:
 
 .. code-block:: python
