@@ -56,83 +56,98 @@ Summary
 
 Importing petri equips your app/pacakage with:
 
-* Dotenv file handling using python-dotenv.
-* Package metadata (for installed packages), using importlib_metadata.
-* Settings using pydantic.
-* Logging config using structlog.
+* Dotenv file handling using `python-dotenv <https://pypi.org/project/python-dotenv>`_.
+* Package metadata (for installed packages), using `importlib-metadata <https://pypi.org/project/importlib-metadata>`_.
+* Settings using `pydantic <https://pypi.org/project/pydantic>`_.
+* Logging config using `structlog <https://pypi.org/project/structlog>`_.
 * Environment switching (prod/dev/test) handling via ENV environment variable.
+
+
+.. image:: assets/demo.gif
+ :target: https://asciinema.org/a/3vc6LraDAy2v7KQvEoKGRv4sF
+ :alt: Sample petri usage
 
 Install
 -------
 
-Install using `poetry` or `pip`:
+Install using poetry ``poetry add petri`` or pip ``pip install petri``.
 
-- Poetry::
-
-    poetry add petri
-
-- pip::
-
-    pip install petri
+Optionally, also install the ``color`` extra for colored logs using `colorama <https://pypi.org/project/colorama>`_.
 
 Usage
 -----
 
-- [OPTIONAL] Define an environment variable named `env_file`, to feed
-  additional envs. Its value must be the path to a valid, existing file.
+.. raw:: html
 
-- Define dev/prod/test settings:
+   <script id="asciicast-3vc6LraDAy2v7KQvEoKGRv4sF" src="https://asciinema.org/a/3vc6LraDAy2v7KQvEoKGRv4sF.js" async></script>
 
-  .. code:: python
+* Define configuration setting(s) and instantiate ``petri.Petri``:
 
-      from petri.settings import BaseSettings
+.. code-block:: python
 
+   #  my_package/__init__.py
 
-      class Settings(BaseSettings):
-          class Config:  # pylint: disable=missing-docstring,too-few-public-methods
-              env_prefix = "A_PKG_"
-
-
-      class Production(Settings):
-          ENV = "production"
+   from petri import Petri
+   from petri.settings import BaseSettings
+   from petri.loggin import LogFormatter, LogLevel
 
 
-      class Development(Settings):
-          ENV = "development"
+   class Settings(BaseSettings):
+       class Config:
+           env_prefix = "MY_PKG_"  # VERY IMPORTANT!!!
+       # define common settings here
+
+   class Production(Settings):
+       LOG_FORMAT = LogFormatter.JSON
+       LOG_LEVEL = LogLevel.TRACE
 
 
-      class Testing(Settings):
-          ENV = "testing"
+   class Development(Settings):
+       LOG_FORMAT = LogFormatter.COLOR  # requires colorama
+       LOG_LEVEL = LogLevel.WARNING
 
 
-  IMPORTANT: In your base class, define ``Config.env_prefix``. For example, a package
-  named `a-pkg` turns into `A_PKG_`. The code used should be compatible with:
-  `Config.env_prefix=[package_name].upper().replace('-' ,'_')+'_'`.
+   pkg = Petri(__file__)
 
-- Select which class of setting to use, by doing one of the folowing:
+   # demo logs
+   pkg.log.info("log away info level",mode=pkg.settings, version=pkg.meta.version)
+   pkg.log.warning("this will show", kewl=True)
 
-  + Set the envvar `[package_name].replace("-", "_").upper() + "_CONFIG"` to
-    a defined settings class (eg: `A_PKG_CONFIG=a_pkg.settings:Production`), or
+.. note::
 
-  + Use the `default_config` kwarg when instantiating `petri.Petri` (See Below)
+   You **must** define ``Config.env_prefix`` inside your setting class
+   (see above). This allows `petri` to select settings class using envvars.
 
-  Of course, you can use both. Petri will attempt to load said env, and if not
-  found, default to the defined kwarg.
+   As an example, a package named ``my-pkg`` should have its setting(s) classes:
 
-- Instantiate `petri.Petri` form your package's `__init__.py`, like so:
-
-   .. code:: python
-
-      """A package: sample petri usage"""
-
-      from petri import Petri
-
-      pkg = Petri(__file__)
-
-      __version__ = "1.2.3"
+   1. Inherit from ``petri.BaseSettings``
+   2. Contain a ``Config`` subclass (just like for ``pydantic``'s), with its
+      ``env_prefix`` set to  ``"MY_PKG_"``.
 
 
-This allows petri to:
+   The code used should be compatible with:
+
+     ``Config.env_prefix=[package_name].upper().replace('-' ,'_')+'_'``.
+
+     (See `petri.Petri.pkg_2_envvar`.)
+
+* [OPTIONAL] Define an environment variable named `env_file`, to feed
+   additional envs. Its value must be the path to a valid, existing file.
+
+* Select which of your settings classes to use, by doing one of the folowing:
+
+   + Point the selector envvar (eg: for `a-pkg`, this would be
+     `A_PKG_CONFIG=a_pkg.settings:Production`, see `petri.Petri.pkg_2_envvar`),
+     or
+
+   + Use the `default_config` kwarg when instantiating `petri.Petri`
+     (See below)
+
+   Of course, you can use both. Petri will attempt to load said env, and if not
+   found, default to the defined kwarg.
+
+Additional Info
+---------------
 
 - Load `env_file`'s contents, if defined.
 - Provide your package's metadata (version, author, etc), available in
@@ -141,3 +156,7 @@ This allows petri to:
   default, available in `pkg.settings` (https://pydantic-docs.helpmanual.io/#id5)
 - Configure and expose a logger, available in `pkg.log`, which uses
   configuration defined in your settings.
+
+-----
+
+For more info, check the `docs <https://petri.rtfd.org>`_.
