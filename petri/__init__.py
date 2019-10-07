@@ -10,7 +10,7 @@ from petri.loggin import configure_logging
 from petri.metadata import Metadata
 from petri.settings import BaseSettings
 
-__version__ = "0.23.1"
+__version__ = "0.23.2"
 
 
 class Petri:  # pylint: disable=R0903
