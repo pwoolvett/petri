@@ -95,7 +95,7 @@ def test_loglevel_format_output(
     with monkeypatch.context() as patcher:
         patcher.setenv("A_PKG_LOG_LEVEL", str(lvl))
         patcher.setenv("A_PKG_LOG_DEST", dest)
-        patcher.setenv("A_PKG_LOG_FMT", fmt)
+        patcher.setenv("A_PKG_LOG_FORMAT", fmt)
         if dest == "FILE":
             logfile_location = tmpdir.join(
                 str(datetime.datetime.now()) + ".log"
@@ -134,7 +134,7 @@ def test_trace(monkeypatch, capsys, a_pkg_import):  # pylint: disable=W0621
     with monkeypatch.context() as patcher:
         patcher.setenv("A_PKG_LOG_LEVEL", "1")
         patcher.setenv("A_PKG_LOG_DEST", LogDest.CONSOLE.value)
-        patcher.setenv("A_PKG_LOG_FMT", LogFormatter.JSON.value)
+        patcher.setenv("A_PKG_LOG_FORMAT", LogFormatter.JSON.value)
 
         a_pkg = a_pkg_import(setenv=True)
         log = a_pkg.pkg.log

@@ -44,7 +44,7 @@ class BaseSettings(PydanticBaseSettings, ABC):
     LOG_DEST: LogDest = LogDest.CONSOLE
     """Define allowed destinations for logs"""
 
-    LOG_FMT: LogFormatter = LogFormatter.COLOR
+    LOG_FORMAT: LogFormatter = LogFormatter.COLOR
     """Define allowed formats for logs."""
 
     LOG_STORAGE: Path = None  # type: ignore
@@ -149,4 +149,4 @@ class _PetriSettings(BaseSettings):
 
     LOG_LEVEL = LogLevel.WARNING
     LOG_DEST = LogDest.CONSOLE
-    LOG_FMT = LogFormatter.COLOR
+    LOG_FORMAT = LogFormatter.COLOR

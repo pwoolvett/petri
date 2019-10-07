@@ -46,11 +46,18 @@ class Petri:  # pylint: disable=R0903
             self.__package,
             self.settings.LOG_LEVEL,
             self.settings.LOG_DEST,
-            self.settings.LOG_FMT,
+            self.settings.LOG_FORMAT,
             self.settings.LOG_STORAGE,
         )
 
-        self.log.info(str(self.__dict__))
+        self.log.debug(
+            "Package Initialization",
+            package=self.__package,
+            log_level=self.settings.LOG_LEVEL.value,
+            log_dest=self.settings.LOG_DEST.value,
+            log_fmt=self.settings.LOG_FORMAT.value,
+            log_storage=str(self.settings.LOG_STORAGE),
+        )
 
 
 pkg = Petri(__file__, default_config="petri.settings:_PetriSettings")
