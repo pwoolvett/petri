@@ -10,6 +10,13 @@ from pathlib import Path
 
 import structlog
 
+try:
+    import colorama  # pylint: disable=W0611
+
+    COLORAMA_INSTALLED = True
+except ImportError:
+    COLORAMA_INSTALLED = False
+
 
 class LogLevel(IntEnum):
     """Explicitly define allowed logging levels."""
@@ -41,18 +48,6 @@ class LogFormatter(Enum):
 
     COLOR = "COLOR"
     """pprinted, colored, for humans"""
-
-
-# def common_chain():
-#     timestamper = structlog.processors.TimeStamper(fmt="iso")
-#     return [
-#         structlog.stdlib.add_logger_name,
-#         structlog.stdlib.add_log_level,
-#         structlog.stdlib.PositionalArgumentsFormatter(),
-#         timestamper,
-#         structlog.processors.StackInfoRenderer(),
-#         structlog.processors.format_exc_info,
-#     ]
 
 
 COMMON_CHAIN = [
@@ -97,7 +92,7 @@ def configure_logging(
         fmt = {
             "()": structlog.stdlib.ProcessorFormatter,
             "processor": structlog.dev.ConsoleRenderer(
-                colors=dest == LogDest.CONSOLE
+                colors=COLORAMA_INSTALLED and (dest == LogDest.CONSOLE)
             ),
             "foreign_pre_chain": COMMON_CHAIN,
         }
