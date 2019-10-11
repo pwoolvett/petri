@@ -25,6 +25,8 @@ class Petri:  # pylint: disable=R0903
             >>> pkg_2_envvar('a-pkg')
             'A_PKG_CONFIG'
 
+        "In the face of ambiguity, refuse the temptation to guess."
+
         """
         return name.replace("-", "_").upper() + "_CONFIG"
 
