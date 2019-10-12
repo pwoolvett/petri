@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "petri"
-version = "0.23.2"
+version = "0.24.0"
 description = "Free your python code from 12-factor boilerplate."
 license = "Unlicense"
 authors = [
@@ -11,12 +11,11 @@ homepage = "https://pypi.org/project/petri/"
 repository = "https://github.com/pwoolvett/petri"
 documentation = "https://petri.readthedocs.io/en/stable/"
 keywords = [
-    "pyproject.toml",
     "dotenv",
     "boilerplate",
     "12-factor",
     "pydantic",
-    "log",
+    "structlog",
 ]
 
 [tool.poetry.dependencies]
