@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """Petri: 12-factor boilerplate in your python code."""
 
-from importlib import import_module
 from pathlib import Path
 from typing import Optional
 
@@ -16,20 +15,6 @@ __version__ = "0.23.2"
 class Petri:  # pylint: disable=R0903
     """Init & instantiate other modules & classes."""
 
-    @staticmethod
-    def pkg_2_envvar(name: str) -> str:
-        """Transform package name into config selector string.
-
-        Example:
-
-            >>> pkg_2_envvar('a-pkg')
-            'A_PKG_CONFIG'
-
-        "In the face of ambiguity, refuse the temptation to guess."
-
-        """
-        return name.replace("-", "_").upper() + "_CONFIG"
-
     def __init__(
         self, init_dot_py: str, *, default_config: Optional[str] = None
     ):
@@ -40,7 +25,7 @@ class Petri:  # pylint: disable=R0903
         self.env_file: Optional[str] = init_dotenv()
         self.meta = Metadata(self.__package)
         self.settings = BaseSettings.from_envvar(
-            self.pkg_2_envvar(self.__package),
+            self.__package,
             init_dot_py=self.__init_dot_py,
             default_config=self.__default_config,
         )
