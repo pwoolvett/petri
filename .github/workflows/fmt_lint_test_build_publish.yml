@@ -99,10 +99,10 @@ jobs:
           name: package
           path: dist
           
-      - name: Create a Release
-        if: contains( github.ref, 'tag' )
-        uses: elgohr/Github-Release-Action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: ${{ github.ref.tag }}
+      # - name: Create a Release
+      #   if: contains( github.ref, 'tag' )
+      #   uses: elgohr/Github-Release-Action@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     args: ${{ github.ref.tag }}
