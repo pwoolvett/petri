@@ -1,8 +1,13 @@
+import inspect
+import itertools
 import os
 from pathlib import Path
 
 import pytest
 
+from petri.loggin import LogFormatter
+from petri.loggin import LogLevel
+from petri.settings import BaseSettings
 from tests.unit import a_pkg_import  # pylint: disable=W0611
 from tests.unit import restore_file
 from tests.unit import temp_file  # pylint: disable=W0611
@@ -75,3 +80,68 @@ def test_load_settings(
                     assert "does not have the format" in e_info
             else:
                 raise NotImplementedError
+
+
+def make_setting_obj(outer, inner, parent, additional_config, prefix):
+
+    config = {}
+    if prefix:
+        config["env_prefix"] = "config_"
+
+    if additional_config:
+        config["case_sensitive"] = True
+
+    if inner == "tuple":
+        config = (config,)
+    elif inner == "cls":
+        config = type("Config", (), config)
+
+    outer_obj = {
+        "ENV": "Testing",
+        "LOG_LEVEL": LogLevel.WARNING,
+        "LOG_FORMAT": LogFormatter.COLOR,
+        "Config": config,
+    }
+
+    if config:
+        outer_obj["Config"] = config
+
+    if outer == "tuple":
+        outer_obj = (outer_obj,)
+    elif inner == "cls":
+        outer_obj = type(
+            "Outer", (BaseSettings,) if parent else tuple(), outer_obj
+        )
+
+    return outer_obj
+
+
+KIND_OPTS = ("cls", "dict", "tuple")
+TF = (True, False)
+
+
+@pytest.mark.parametrize(
+    "outer,inner,parent,additional_config,prefix",
+    itertools.product(KIND_OPTS, KIND_OPTS, TF, TF, TF),
+)
+def test_validate_class(outer, inner, parent, additional_config, prefix):
+    config_obj = make_setting_obj(
+        outer, inner, parent, additional_config, prefix
+    )
+
+    def validate():
+        return BaseSettings.validate_class("pkg-name", "Outer", config_obj)
+
+    if prefix or ("tuple" in (outer, inner)):
+        with pytest.raises(ValueError):
+            validate()
+        return
+
+    validated = validate()
+
+    assert isinstance(validated, type)
+    assert validated.__name__ == "Outer"
+    assert hasattr(validated, "Config")
+    assert BaseSettings in inspect.getmro(validated)
+    assert hasattr(validated.Config, "env_prefix")
+    assert validated.Config.env_prefix == "PKG_NAME_"
