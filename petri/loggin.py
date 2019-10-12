@@ -11,10 +11,10 @@ from pathlib import Path
 import structlog
 
 try:
-    import colorama  # pylint: disable=W0611
+    import colorama  # pylint: disable=W0611,
 
     COLORAMA_INSTALLED = True
-except ImportError:
+except ImportError:  # pragma: no cover
     COLORAMA_INSTALLED = False
 
 
