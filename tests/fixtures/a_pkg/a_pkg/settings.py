@@ -4,8 +4,7 @@ from petri.settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    class Config:  # pylint: disable=missing-docstring,too-few-public-methods
-        env_prefix = "A_PKG_"
+    pass
 
 
 class Production(Settings):
