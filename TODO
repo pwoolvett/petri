@@ -1,4 +1,5 @@
 add tqdm mocker
 add docs to tox
 add missing bkp tox functionality
-add readthedocs yaml
+1 allow settings to have ints or strings and smartly detect loglevel, logformat, etc
+2 add readme to index rst

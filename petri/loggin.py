@@ -10,12 +10,19 @@ from pathlib import Path
 
 import structlog
 
-try:
+try:  # pragma: no cover
     import colorama  # pylint: disable=W0611,
 
     COLORAMA_INSTALLED = True
-except ImportError:  # pragma: no cover
+except ImportError:
     COLORAMA_INSTALLED = False
+
+try:  # pragma: no cover
+    import tqdm  # pylint: disable=W0611,
+
+    TQDM_INSTALLED = True
+except ImportError:
+    TQDM_INSTALLED = False
 
 
 class LogLevel(IntEnum):
@@ -60,6 +67,24 @@ COMMON_CHAIN = [
 ]
 
 
+def maybe_patch_tqdm(logger, dev_mode):
+    """Replaces ``tqdm.tqdm`` calls with noops."""
+
+    if (not dev_mode) and TQDM_INSTALLED:
+
+        def _tqdm(*a, **kw):
+            """Does nothing.
+
+            Kills tqdm
+
+            """
+            if kw or len(a) != 1:
+                logger.warning("tqdm usage supressed", args=a, kwargs=kw)
+            return a[0]
+
+        tqdm.tqdm = _tqdm
+
+
 def configure_logging(
     name,
     level: LogLevel,
@@ -82,6 +107,8 @@ def configure_logging(
 
     """
 
+    dev_mode = (formatter == LogFormatter.COLOR) and (dest == LogDest.CONSOLE)
+
     if formatter == LogFormatter.JSON:
         fmt = {
             "()": structlog.stdlib.ProcessorFormatter,
@@ -92,7 +119,7 @@ def configure_logging(
         fmt = {
             "()": structlog.stdlib.ProcessorFormatter,
             "processor": structlog.dev.ConsoleRenderer(
-                colors=COLORAMA_INSTALLED and (dest == LogDest.CONSOLE)
+                colors=dev_mode and COLORAMA_INSTALLED
             ),
             "foreign_pre_chain": COMMON_CHAIN,
         }
@@ -150,8 +177,8 @@ def configure_logging(
     )
 
     logger = structlog.get_logger(name)
-
     logger.trace = trace_using(logger)
+    maybe_patch_tqdm(logger, dev_mode)
     return logger
 
 

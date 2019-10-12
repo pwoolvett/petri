@@ -212,7 +212,7 @@ class BaseSettings(PydanticBaseSettings, ABC):
             msg += f". Received: {type(config_obj)}"
             raise ValueError(msg) from None
 
-        if not hasattr(config_obj, "Config"):
+        if not hasattr(config_obj, "Config"):  # pragma: no cover
             raise NotImplementedError("Could not define Config attribute")
 
         config_subcls = config_obj.Config  # type: ignore
