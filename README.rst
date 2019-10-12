@@ -118,7 +118,7 @@ Optionally, also install the ``color`` extra for colored logs using `colorama <h
 Usage
 -----
 
-Just fefine configuration setting(s) and instantiate ``petri.Petri``:
+Just define configuration setting(s) and instantiate ``petri.Petri``:
 
 .. code-block:: python
 
