@@ -2,6 +2,7 @@ import datetime
 import itertools
 import json
 import logging
+import re
 from pathlib import Path
 
 import pytest
@@ -10,6 +11,14 @@ from petri.loggin import LogDest
 from petri.loggin import LogFormatter
 from petri.loggin import LogLevel
 from tests.unit import a_pkg_import  # pylint: disable=W0611
+
+try:  # pragma: no cover
+    import colorama  # pylint: disable=W0611,
+
+    COLORAMA_INSTALLED = True
+    COLOR_REMOVER = re.compile(r"(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]")
+except ImportError:
+    COLORAMA_INSTALLED = False
 
 LEVELS = [a.value for a in dict(LogLevel.__members__).values()]
 MSG_LEVELS = [
@@ -35,9 +44,11 @@ def check_log(
                 for line in err.splitlines():
                     assert json.loads(line)
             else:
+
+                err2 = COLOR_REMOVER.sub("", err)
                 assert (
                     "".join(
-                        x for x in err.replace(msg, "").split(" ")[1:] if x
+                        x for x in err2.replace(msg, "").split(" ")[1:] if x
                     )
                     .replace(msg_lvl, "")
                     .replace("a_pkg", "")
