@@ -24,7 +24,7 @@ if os.path.exists(readme_path):
 setup(
     long_description=readme,
     name='petri',
-    version='0.24.0',
+    version='0.24.1',
     description='Free your python code from 12-factor boilerplate.',
     python_requires='==3.*,>=3.6.0',
     project_urls={'homepage': 'https://pypi.org/project/petri/', 'repository': 'https://github.com/pwoolvett/petri', 'documentation': 'https://petri.readthedocs.io/en/stable/'},

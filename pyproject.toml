@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "petri"
-version = "0.24.0"
+version = "0.24.1"
 description = "Free your python code from 12-factor boilerplate."
 license = "Unlicense"
 authors = [
