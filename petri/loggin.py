@@ -58,6 +58,7 @@ class LogFormatter(Enum):
 
 
 COMMON_CHAIN = [
+    structlog.threadlocal.merge_threadlocal_context,
     structlog.stdlib.add_logger_name,
     structlog.stdlib.add_log_level,
     structlog.stdlib.PositionalArgumentsFormatter(),
