@@ -86,29 +86,13 @@ def maybe_patch_tqdm(logger, dev_mode):
         tqdm.tqdm = _tqdm
 
 
-def configure_logging(
-    name,
+def _control_logging(
     level: LogLevel,
     dest: LogDest,
     formatter: LogFormatter,
     log_file: Path,
+    dev_mode: bool,
 ):
-    """Setup logging with (hopefully) sane defaults.
-
-    Args:
-        name: Name for the logger.
-        level: Level from where to start logging.
-        dest: Whether to log to file or console.
-        formatter: Whether to output data as json or colored, parsed
-            logs.
-        log_file: Where to store logfiles. Only used if ``dest='FILE'``.
-
-    Returns:
-        The configured logger.
-
-    """
-
-    dev_mode = (formatter == LogFormatter.COLOR) and (dest == LogDest.CONSOLE)
 
     if formatter == LogFormatter.JSON:
         fmt = {
@@ -165,7 +149,7 @@ def configure_logging(
             },
         }
     )
-    structlog.configure(
+    structlog.configure_once(
         processors=[
             structlog.stdlib.filter_by_level,
             *COMMON_CHAIN,
@@ -176,6 +160,37 @@ def configure_logging(
         wrapper_class=structlog.stdlib.BoundLogger,
         cache_logger_on_first_use=True,
     )
+
+
+def configure_logging(
+    name,
+    level: LogLevel,
+    dest: LogDest,
+    formatter: LogFormatter,
+    log_file: Path,
+    kidnap_loggers=False,
+):
+    """Setup logging with (hopefully) sane defaults.
+
+    Args:
+        name: Name for the logger.
+        level: Level from where to start logging.
+        dest: Whether to log to file or console.
+        formatter: Whether to output data as json or colored, parsed
+            logs.
+        log_file: Where to store logfiles. Only used if ``dest='FILE'``.
+        kidnap_loggers: Whether to configure the loggers on just
+            instantiate one.
+
+    Returns:
+        The configured logger.
+
+    """
+
+    dev_mode = (formatter == LogFormatter.COLOR) and (dest == LogDest.CONSOLE)
+
+    if kidnap_loggers:
+        _control_logging(level, dest, formatter, log_file, dev_mode)
 
     logger = structlog.get_logger(name)
     logger.trace = trace_using(logger)

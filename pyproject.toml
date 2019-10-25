@@ -27,7 +27,6 @@ importlib_metadata = "^0.23"
 
 colorama = {version = "^0.4.1", optional = true}
 
-
 [tool.poetry.dev-dependencies]
 pip = "^19.2.3"
 
