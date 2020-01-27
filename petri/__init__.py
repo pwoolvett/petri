@@ -25,7 +25,6 @@ class Petri:  # pylint: disable=R0903
         self.__init_dot_py = init_dot_py
         self.__package = str(Path(init_dot_py).parent.stem)
         self.__default_config = default_config
-        self.__kidnap_loggers = kidnap_loggers
 
         self.env_file: Optional[str] = init_dotenv()
         self.meta = Metadata(self.__package)
@@ -36,11 +35,13 @@ class Petri:  # pylint: disable=R0903
         )
         self.log = configure_logging(
             self.__package,
-            self.settings.LOG_LEVEL,
-            self.settings.LOG_DEST,
-            self.settings.LOG_FORMAT,
-            self.settings.LOG_STORAGE,
-            self.__kidnap_loggers,
+            log_settings={
+                "level": self.settings.LOG_LEVEL,
+                "dest": self.settings.LOG_DEST,
+                "formatter": self.settings.LOG_FORMAT,
+                "log_file": self.settings.LOG_STORAGE,
+            },
+            kidnap_loggers=kidnap_loggers,
         )
 
         self.log.debug(

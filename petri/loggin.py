@@ -7,6 +7,8 @@ from enum import Enum
 from enum import IntEnum
 from functools import wraps
 from pathlib import Path
+from typing import Any
+from typing import Dict
 
 import structlog
 
@@ -163,22 +165,19 @@ def _control_logging(
 
 
 def configure_logging(
-    name,
-    level: LogLevel,
-    dest: LogDest,
-    formatter: LogFormatter,
-    log_file: Path,
-    kidnap_loggers=False,
+    name, log_settings: Dict[str, Any], kidnap_loggers=False,
 ):
     """Setup logging with (hopefully) sane defaults.
 
     Args:
         name: Name for the logger.
-        level: Level from where to start logging.
-        dest: Whether to log to file or console.
-        formatter: Whether to output data as json or colored, parsed
-            logs.
-        log_file: Where to store logfiles. Only used if ``dest='FILE'``.
+        log_settings: configuration for the logger. It must contain the
+            following items:
+            * level: Level from where to start logging.
+            * dest: Whether to log to file or console.
+            * formatter: Whether to output data as json or colored, parsed
+                logs.
+            * log_file: Where to store logfiles. Only used if ``dest='FILE'``.
         kidnap_loggers: Whether to configure the loggers on just
             instantiate one.
 
@@ -186,7 +185,10 @@ def configure_logging(
         The configured logger.
 
     """
-
+    level: LogLevel = log_settings["level"]
+    dest: LogDest = log_settings["dest"]
+    formatter: LogFormatter = log_settings["formatter"]
+    log_file: Path = log_settings["log_file"]
     dev_mode = (formatter == LogFormatter.COLOR) and (dest == LogDest.CONSOLE)
 
     if kidnap_loggers:
