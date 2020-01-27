@@ -45,11 +45,14 @@ class Petri:  # pylint: disable=R0903
 
         self.log.debug(
             "Package Initialization",
-            package=self.__package,
-            log_level=self.settings.LOG_LEVEL.value,
-            log_dest=self.settings.LOG_DEST.value,
-            log_fmt=self.settings.LOG_FORMAT.value,
-            log_storage=str(self.settings.LOG_STORAGE),
+            **{
+                "PETRI.package": self.__package,
+                "PETRI.log_level": self.settings.LOG_LEVEL.value,
+                "PETRI.log_dest": self.settings.LOG_DEST.value,
+                "PETRI.log_fmt": self.settings.LOG_FORMAT.value,
+                "PETRI.log_storage": str(self.settings.LOG_STORAGE),
+                "PETRI.env_file": self.env_file,
+            },
         )
 
 
