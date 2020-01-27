@@ -79,10 +79,8 @@ def maybe_patch_tqdm(logger, dev_mode):
             """Does nothing.
 
             Kills tqdm
-
             """
-            if kw or len(a) != 1:
-                logger.warning("tqdm usage supressed", args=a, kwargs=kw)
+            logger.warning("tqdm usage supressed", args=a, kwargs=kw)
             return a[0]
 
         tqdm.tqdm = _tqdm

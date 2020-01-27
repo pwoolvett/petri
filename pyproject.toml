@@ -55,6 +55,7 @@ Sphinx = "^1.8"
 sphinx_rtd_theme = "^0.4.2"
 sphinx-autodoc-typehints = "^1.5"
 sphinxcontrib-apidoc = "^0.3.0"
+tqdm = "^4.42.0"
 
 [tool.poetry.extras]
 color = [ "colorama", ]
