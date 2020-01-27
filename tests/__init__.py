@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import os
 from contextlib import AbstractContextManager
 from contextlib import contextmanager
-import os
+
 
 @contextmanager
 def temp_file(path, mode):
@@ -12,8 +13,8 @@ def temp_file(path, mode):
     finally:
         file.close()
         os.remove(path)
-        
-        
+
+
 class nullcontext(AbstractContextManager):  # pylint: disable=invalid-name
     """Context manager that does no additional processing.
 
