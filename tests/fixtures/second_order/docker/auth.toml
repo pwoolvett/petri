@@ -1,4 +1,0 @@
-[http-basic]
-[http-basic.notpypi]
-password = "password"
-username = "username"
