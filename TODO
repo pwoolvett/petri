@@ -1,3 +1,4 @@
+ensure take_control works ok
 add tqdm mocker
 add docs to tox
 add missing bkp tox functionality
