@@ -1,12 +1,13 @@
+# -*- coding: utf-8 -*-
+
 import itertools
 import os
 from pathlib import Path
 
 import pytest
 
-from tests.unit import a_pkg_import  # pylint: disable=W0611
-from tests.unit import nullcontext
-from tests.unit import temp_file
+from tests import nullcontext
+from tests import temp_file
 
 PWD_LOCATION = str(Path(os.getcwd()).joinpath(".env"))
 CUSTOM_LOCATION = "sadfsdasdf.env"
@@ -17,9 +18,9 @@ ENV_FILE_OPTS = (None, PWD_LOCATION, CUSTOM_LOCATION)
 @pytest.mark.parametrize(
     "requested,real", itertools.product(ENV_FILE_OPTS, ENV_FILE_OPTS)
 )
-def test_dotenv(
-    monkeypatch, a_pkg_import, requested, real
-):  # pylint: disable=W0621
+def test_dotenv(monkeypatch, requested, real):  # pylint: disable=W0621
+
+    from petri.dot_env import init_dotenv
 
     env_file_path = temp_file(real, "w+") if real else nullcontext()
 
@@ -36,16 +37,14 @@ def test_dotenv(
 
         if requested:
             if real == requested:
-                a_pkg = a_pkg_import()
-                assert a_pkg.pkg.env_file == requested
+                generated_location = init_dotenv()
+                assert generated_location == requested
             else:
                 with pytest.raises(IOError):
-                    a_pkg = a_pkg_import()
+                    init_dotenv()
         else:  # not requested
             if real == PWD_LOCATION:
-                # from examples.a_pkg import a_pkg
-                a_pkg = a_pkg_import()
-                assert str(a_pkg.pkg.env_file) == real
+                generated_location = init_dotenv()
+                assert generated_location == real
             else:
-                a_pkg = a_pkg_import()
-                assert a_pkg.pkg.env_file is None
+                assert init_dotenv() is None
