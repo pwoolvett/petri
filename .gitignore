@@ -394,3 +394,4 @@ docs/source/*.rst
 .bkp
 
 coverage.*.xml
+**/*test-results.xml
