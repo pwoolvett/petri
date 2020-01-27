@@ -11,4 +11,4 @@ def test_bootstrap(imported_petri, pyproject_toml):
     for name, value in expected.items():
         assert getattr(pkg.meta, name) == value
 
-    petri.__version__ == pyproject_toml["version"]
+    assert petri.__version__ == pyproject_toml["version"]
