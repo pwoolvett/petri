@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import importlib
 import sys
 from pathlib import Path
@@ -9,8 +11,8 @@ import toml
 @pytest.yield_fixture(name="imported_petri")
 def import_petri_fixture():
     if "petri" in globals():
-        assert sys.getrefcount(a_pkg) == 3
-        del petri
+        assert sys.getrefcount("petri") == 3
+        del petri  # pylint: disable=E0602
 
     if "petri" in sys.modules:
         del sys.modules["petri"]
