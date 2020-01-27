@@ -26,6 +26,7 @@ try:  # pragma: no cover
 except ImportError:
     TQDM_INSTALLED = False
 
+LOG_KIDNAPPER = None
 
 class LogLevel(IntEnum):
     """Explicitly define allowed logging levels."""
@@ -176,13 +177,15 @@ def configure_logging(
             * formatter: Whether to output data as json or colored, parsed
                 logs.
             * log_file: Where to store logfiles. Only used if ``dest='FILE'``.
-        kidnap_loggers: Whether to configure the loggers on just
+        kidnap_loggers: Whether to configure the loggers or just
             instantiate one.
 
     Returns:
         The configured logger.
 
     """
+    global LOG_KIDNAPPER
+    
     level: LogLevel = log_settings["level"]
     dest: LogDest = log_settings["dest"]
     formatter: LogFormatter = log_settings["formatter"]
@@ -190,6 +193,12 @@ def configure_logging(
     dev_mode = (formatter == LogFormatter.COLOR) and (dest == LogDest.CONSOLE)
 
     if kidnap_loggers:
+        if LOG_KIDNAPPER:
+            raise ValueError(
+                'Only one app/lib can take control of the loggers. '
+                f'remove `kidnap_loggers` from `Petri` in {LOG_KIDNAPPER}'
+            )
+        LOG_KIDNAPPER = name
         _control_logging(level, dest, formatter, log_file, dev_mode)
 
     logger = structlog.get_logger(name)

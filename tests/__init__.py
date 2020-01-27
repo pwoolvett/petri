@@ -34,3 +34,14 @@ class nullcontext(AbstractContextManager):  # pylint: disable=invalid-name
 
     def __exit__(self, *excinfo):  # pylint: disable=W0221
         pass
+
+
+class Mocklogger:  # pylint: disable=C0115,R0903
+    def __init__(self, name="MockLogger", *args, **kwargs):
+        self.name = name
+        self.warnings = list()
+        self.args = args
+        self.kwargs = kwargs
+
+    def warning(self, *args, **kwargs):
+        self.warnings.append({"args": args, "kwargs": kwargs})
