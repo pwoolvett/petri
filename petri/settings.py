@@ -14,9 +14,11 @@ from typing import Optional
 from typing import Type
 from typing import TypeVar
 from typing import Union
+import sys
 
 from pydantic import BaseSettings as PydanticBaseSettings
 from pydantic import validator
+from pydantic.error_wrappers import ValidationError
 
 from petri.ext import pkg_2_envvar
 from petri.ext import to_upper_underscore
@@ -129,7 +131,23 @@ class BaseSettings(PydanticBaseSettings, ABC):
         config_obj = getattr(import_module(module), cls_name)
         cls_obj = cls.validate_class(pkg_name, cls_name, config_obj)
 
-        return cls_obj(INIT_DOT_PY=init_dot_py)
+        try:
+            return cls_obj(INIT_DOT_PY=init_dot_py)
+        except ValidationError as valid_err:
+            mdl_config = getattr(valid_err.model, 'Config', None)
+            prefix = getattr(mdl_config, 'env_prefix', 'None')
+            loc = f"{valid_err.model.__module__}:{valid_err.model.__name__}"
+            print(str(valid_err))
+            if prefix:
+                print(
+                    "Check/define them in `{}`, ".format(loc) + 
+                    "or setting env vars{}".format(
+                        f' prefixed with `{prefix}`.' if prefix else '.',
+                        file=sys.stderr
+                    )
+                )
+            sys.exit(1)
+
 
     @classmethod
     def _dict_2_cls(cls, config_obj, cls_name):
@@ -283,4 +301,4 @@ class DevelopmentLog:  # pylint: disable=R0903
 
 
 class _PetriSettings(BaseSettings, DevelopmentLog):
-    """DO NOT USE THIS - Used only to bootstrap petri from within."""
+    """DO NOT USE THIS - Used only to bootstrap petri."""
