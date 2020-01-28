@@ -4,6 +4,7 @@
 import inspect
 import logging
 import os
+import sys
 from abc import ABC
 from importlib import import_module
 from pathlib import Path
@@ -14,7 +15,6 @@ from typing import Optional
 from typing import Type
 from typing import TypeVar
 from typing import Union
-import sys
 
 from pydantic import BaseSettings as PydanticBaseSettings
 from pydantic import validator
@@ -134,20 +134,19 @@ class BaseSettings(PydanticBaseSettings, ABC):
         try:
             return cls_obj(INIT_DOT_PY=init_dot_py)
         except ValidationError as valid_err:
-            mdl_config = getattr(valid_err.model, 'Config', None)
-            prefix = getattr(mdl_config, 'env_prefix', 'None')
+            mdl_config = getattr(valid_err.model, "Config", None)
+            prefix = getattr(mdl_config, "env_prefix", "None")
             loc = f"{valid_err.model.__module__}:{valid_err.model.__name__}"
             print(str(valid_err))
             if prefix:
                 print(
-                    "Check/define them in `{}`, ".format(loc) + 
-                    "or setting env vars{}".format(
-                        f' prefixed with `{prefix}`.' if prefix else '.',
-                        file=sys.stderr
+                    "Check/define them in `{}`, ".format(loc)
+                    + "or setting env vars{}".format(
+                        f" prefixed with `{prefix}`." if prefix else ".",
+                        file=sys.stderr,
                     )
                 )
             sys.exit(1)
-
 
     @classmethod
     def _dict_2_cls(cls, config_obj, cls_name):
