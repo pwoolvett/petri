@@ -22,10 +22,10 @@ keywords = [
 python = "^3.6"
 python-dotenv = "^0.10.3"
 pydantic = "^0.32.2"
-structlog = "^19.1.0"
 importlib_metadata = "^0.23"
 
 colorama = {version = "^0.4.1", optional = true}
+structlog = "^20.1.0"
 
 [tool.poetry.dev-dependencies]
 pip = "^19.2.3"

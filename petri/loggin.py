@@ -26,7 +26,6 @@ try:  # pragma: no cover
 except ImportError:
     TQDM_INSTALLED = False
 
-LOG_KIDNAPPER = None
 
 class LogLevel(IntEnum):
     """Explicitly define allowed logging levels."""
@@ -80,6 +79,7 @@ def maybe_patch_tqdm(logger, dev_mode):
             """Does nothing.
 
             Kills tqdm
+
             """
             logger.warning("tqdm usage supressed", args=a, kwargs=kw)
             return a[0]
@@ -87,14 +87,7 @@ def maybe_patch_tqdm(logger, dev_mode):
         tqdm.tqdm = _tqdm
 
 
-def _control_logging(
-    level: LogLevel,
-    dest: LogDest,
-    formatter: LogFormatter,
-    log_file: Path,
-    dev_mode: bool,
-):
-
+def _build_formatter(formatter, dev_mode):
     if formatter == LogFormatter.JSON:
         fmt = {
             "()": structlog.stdlib.ProcessorFormatter,
@@ -113,28 +106,33 @@ def _control_logging(
         raise NotImplementedError(  # pragma: no cover
             "Pydantic shouldn't allow this."
         )
+    return fmt
 
+
+def _build_hndler(dest, level, log_file: Path):
+    common_kw = {
+        "level": level,
+        "formatter": "default",
+    }
     if dest == LogDest.CONSOLE:
-        hndler = {
-            "level": level,
-            "class": "logging.StreamHandler",
-            "formatter": "default",
-        }
-    elif dest == LogDest.FILE:
-        hndler = {
-            "level": level,
+        return {"class": "logging.StreamHandler", **common_kw}
+
+    if dest == LogDest.FILE:
+        log_file.parent.mkdir(parents=True, exist_ok=True)
+        return {
             "class": "logging.handlers.RotatingFileHandler",
             "filename": str(log_file),
-            "formatter": "default",
             "maxBytes": 10e6,
             "backupCount": 100,
+            **common_kw,
         }
-        log_file.parent.mkdir(parents=True, exist_ok=True)
-    else:
-        raise NotImplementedError(  # pragma: no cover
-            "Pydantic shouldn't allow this."
-        )
 
+    raise NotImplementedError(  # pragma: no cover
+        "Pydantic shouldn't allow this."
+    )
+
+
+def _config_native_logging(fmt, hndler, level):
     logging.config.dictConfig(
         {
             "version": 1,
@@ -150,7 +148,10 @@ def _control_logging(
             },
         }
     )
-    structlog.configure_once(
+
+
+def _config_structlog():
+    structlog.configure(
         processors=[
             structlog.stdlib.filter_by_level,
             *COMMON_CHAIN,
@@ -163,8 +164,25 @@ def _control_logging(
     )
 
 
+def _control_logging(
+    fmt, hndler, level, greedy: bool,
+):
+
+    if greedy:
+        structlog.reset_defaults()
+
+    already_configured = structlog.is_configured()
+    if already_configured:
+        pass
+
+    if greedy or not already_configured:
+        _config_native_logging(fmt, hndler, level)
+
+    _config_structlog()
+
+
 def configure_logging(
-    name, log_settings: Dict[str, Any], kidnap_loggers=False,
+    name, log_settings: Dict[str, Any], force=False,
 ):
     """Setup logging with (hopefully) sane defaults.
 
@@ -177,29 +195,24 @@ def configure_logging(
             * formatter: Whether to output data as json or colored, parsed
                 logs.
             * log_file: Where to store logfiles. Only used if ``dest='FILE'``.
-        kidnap_loggers: Whether to configure the loggers or just
+        force: Whether to configure the loggers or just
             instantiate one.
 
     Returns:
         The configured logger.
 
     """
-    global LOG_KIDNAPPER
-    
+
     level: LogLevel = log_settings["level"]
     dest: LogDest = log_settings["dest"]
     formatter: LogFormatter = log_settings["formatter"]
-    log_file: Path = log_settings["log_file"]
+    log_file: Path = Path(log_settings["log_file"]).resolve()
     dev_mode = (formatter == LogFormatter.COLOR) and (dest == LogDest.CONSOLE)
 
-    if kidnap_loggers:
-        if LOG_KIDNAPPER:
-            raise ValueError(
-                'Only one app/lib can take control of the loggers. '
-                f'remove `kidnap_loggers` from `Petri` in {LOG_KIDNAPPER}'
-            )
-        LOG_KIDNAPPER = name
-        _control_logging(level, dest, formatter, log_file, dev_mode)
+    fmt = _build_formatter(formatter, dev_mode)
+    hndler = _build_hndler(dest, level, log_file)
+
+    _control_logging(fmt, hndler, level, force)
 
     logger = structlog.get_logger(name)
     logger.trace = trace_using(logger)

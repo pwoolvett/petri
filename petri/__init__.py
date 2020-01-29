@@ -20,7 +20,7 @@ class Petri:  # pylint: disable=R0903
         init_dot_py: str,
         *,
         default_config: Optional[str] = None,
-        kidnap_loggers=False,
+        force_log_control=False,
     ):
         self.__init_dot_py = init_dot_py
         self.__package = str(Path(init_dot_py).parent.stem)
@@ -41,7 +41,7 @@ class Petri:  # pylint: disable=R0903
                 "formatter": self.settings.LOG_FORMAT,
                 "log_file": self.settings.LOG_STORAGE,
             },
-            kidnap_loggers=kidnap_loggers,
+            force=force_log_control,
         )
 
         self.log.debug(

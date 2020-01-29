@@ -83,6 +83,57 @@ class BaseSettings(PydanticBaseSettings, ABC):
         """Dynamically defined in ``__init__.py``'s folder's sibling."""
         return v or Path(values["BASEPATH"]).joinpath("logs") / "logs.log"
 
+    @staticmethod
+    def _load_requested_setting_name(default_config, config_selector_envvar):
+        try:
+            return os.environ[config_selector_envvar]
+        except KeyError as no_env:
+            msg = f"Environment Variable `{config_selector_envvar}` not found."
+            if default_config is None:
+                msg += " Either supply it indicating the class to load"
+                msg += (
+                    ", or instantiate `Petri` with a `default_config` kwarg."
+                )
+                msg += f" In any case, the format must be `{FORMAT_SEL}`."
+                raise KeyError(msg) from no_env
+            logging.info(msg)
+            return default_config
+
+    @classmethod
+    def _get_validated_class_from_string(cls, module, cls_name, pkg_name):
+        config_obj = getattr(import_module(module), cls_name)
+        return cls.validate_class(pkg_name, cls_name, config_obj)
+
+    @staticmethod
+    def _build_settings_class(cls_obj, init_dot_py):
+        try:
+            return cls_obj(INIT_DOT_PY=init_dot_py)
+        except ValidationError as valid_err:
+            mdl_config = getattr(valid_err.model, "Config", None)
+            prefix = getattr(mdl_config, "env_prefix", "None")
+            loc = f"{valid_err.model.__module__}:{valid_err.model.__name__}"
+            print(str(valid_err))
+            if prefix:
+                print(
+                    "Check/define them in `{}`, ".format(loc)
+                    + "or setting env vars{}".format(
+                        f" prefixed with `{prefix}`." if prefix else ".",
+                        file=sys.stderr,
+                    )
+                )
+            sys.exit(1)
+
+    @staticmethod
+    def _split_selector(requested):
+        try:
+            module, cls_name = requested.split(":")
+        except ValueError as wrong_fmt:
+            msg = "The environment variable {config_selector_envvar}"
+            msg += f" contains {requested},"
+            msg += f" which does not have the format `{FORMAT_SEL}`"
+            raise ValueError(msg) from wrong_fmt
+        return module, cls_name
+
     @classmethod
     def from_envvar(
         cls,
@@ -106,47 +157,17 @@ class BaseSettings(PydanticBaseSettings, ABC):
 
         config_selector_envvar = pkg_2_envvar(pkg_name)
 
-        try:
-            value = os.environ[config_selector_envvar]
-        except KeyError as no_env:
-            msg = f"Environment Variable `{config_selector_envvar}` not found."
-            if default_config is None:
-                msg += " Either supply it indicating the class to load"
-                msg += (
-                    ", or instantiate `Petri` with a `default_config` kwarg."
-                )
-                msg += f" In any case, the format must be `{FORMAT_SEL}`."
-                raise KeyError(msg) from no_env
-            logging.info(msg)
-            value = default_config
+        requested = cls._load_requested_setting_name(
+            default_config, config_selector_envvar
+        )
 
-        try:
-            module, cls_name = value.split(":")
-        except ValueError as wrong_fmt:
-            msg = "The environment variable {config_selector_envvar}"
-            msg += f" contains {value},"
-            msg += f" which does not have the format `{FORMAT_SEL}`"
-            raise ValueError(msg) from wrong_fmt
+        module, cls_name = cls._split_selector(requested)
 
-        config_obj = getattr(import_module(module), cls_name)
-        cls_obj = cls.validate_class(pkg_name, cls_name, config_obj)
+        cls_obj = cls._get_validated_class_from_string(
+            module, cls_name, pkg_name
+        )
 
-        try:
-            return cls_obj(INIT_DOT_PY=init_dot_py)
-        except ValidationError as valid_err:
-            mdl_config = getattr(valid_err.model, "Config", None)
-            prefix = getattr(mdl_config, "env_prefix", "None")
-            loc = f"{valid_err.model.__module__}:{valid_err.model.__name__}"
-            print(str(valid_err))
-            if prefix:
-                print(
-                    "Check/define them in `{}`, ".format(loc)
-                    + "or setting env vars{}".format(
-                        f" prefixed with `{prefix}`." if prefix else ".",
-                        file=sys.stderr,
-                    )
-                )
-            sys.exit(1)
+        return cls._build_settings_class(cls_obj, init_dot_py)
 
     @classmethod
     def _dict_2_cls(cls, config_obj, cls_name):

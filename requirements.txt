@@ -4,5 +4,5 @@ importlib-metadata==0.23
 pydantic==0.32.2
 python-dotenv==0.10.5
 six==1.14.0
-structlog==19.2.0
+structlog==20.1.0
 zipp==2.1.0
